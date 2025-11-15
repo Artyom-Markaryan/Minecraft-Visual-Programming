@@ -2,3 +2,8 @@ name: MinecraftVisualProgramming
 version: '1.0-SNAPSHOT'
 main: io.github.artyom.MinecraftVisualProgramming
 api-version: '1.21'
+commands:
+  code:
+    description: "Gives the player Code Blocks and Values items"
+    usage: /code
+    aliases: [dev]
