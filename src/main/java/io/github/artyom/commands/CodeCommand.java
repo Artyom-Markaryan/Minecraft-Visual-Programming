@@ -19,7 +19,9 @@ public class CodeCommand implements CommandExecutor {
         @NotNull String @NotNull [] args
     ) {
         if (!(sender instanceof Player player)) {
-            Component message = MinecraftVisualProgramming.MINI_MESSAGE.deserialize("<red>This command can only be run by a player.");
+            Component message = MinecraftVisualProgramming.MINI_MESSAGE.deserialize(
+                "<red>Cette commande ne peut être exécutée que par un joueur."
+            );
             sender.sendMessage(message);
             return true;
         }
