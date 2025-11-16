@@ -29,4 +29,8 @@ public final class MinecraftVisualProgramming extends JavaPlugin {
     public void onDisable() {
         this.getLogger().info(PLUGIN_NAME + " is disabled.");
     }
+
+    public static MinecraftVisualProgramming getInstance() {
+        return getPlugin(MinecraftVisualProgramming.class);
+    }
 }
