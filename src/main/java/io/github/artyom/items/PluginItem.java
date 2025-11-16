@@ -5,9 +5,9 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextDecoration;
 
 abstract class PluginItem {
-    protected static Component getCustomName(String customName) {
+    static Component getNonItalicComponent(String inputString) {
         return MinecraftVisualProgramming.MINI_MESSAGE
-            .deserialize(customName)
+            .deserialize(inputString)
             .decoration(TextDecoration.ITALIC, false);
     }
 }
