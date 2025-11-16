@@ -26,8 +26,8 @@ public class CodeCommand implements CommandExecutor {
             return true;
         }
         player.getInventory().clear();
-        player.getInventory().setItem(7, CodeBlocksItem.getNewInstance());
-        player.getInventory().setItem(8, ValuesItem.getNewInstance());
+        player.getInventory().setItem(7, new CodeBlocksItem());
+        player.getInventory().setItem(8, new ValuesItem());
         player.playSound(player.getLocation(), "entity.item.pickup", 1, 1);
         return true;
     }
