@@ -16,9 +16,9 @@ public class LoopCodeBlock extends ItemStack implements PluginItem {
         itemMeta.customName(customName);
         itemMeta.lore(
             List.of(
-                getNonItalicComponent("<dark_gray>» <light_purple>Répète <gray>l'<blue>exécution <gray>des <gold>blocs de code"),
+                getNonItalicComponent("<dark_gray>» <blue>Répète l'exécution <gray>des <aqua>blocs de code"),
                 getNonItalicComponent("<dark_gray>» <gray>à l'intérieur des <gold>blocs accolades"),
-                getNonItalicComponent("<dark_gray>» <gray>selon la <aqua>façon <gray>spécifiée")
+                getNonItalicComponent("<dark_gray>» <gray>selon la <blue>façon <gray>spécifiée")
             )
         );
         itemMeta.setEnchantmentGlintOverride(true);

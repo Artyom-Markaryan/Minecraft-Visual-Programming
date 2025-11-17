@@ -9,15 +9,15 @@ import java.util.List;
 
 public class PlayerEventCodeBlock extends ItemStack implements PluginItem {
     public PlayerEventCodeBlock() {
-        super(Material.CYAN_CONCRETE);
+        super(Material.DIAMOND_BLOCK);
 
         ItemMeta itemMeta = super.getItemMeta();
-        Component customName = getNonItalicComponent("<dark_aqua>☻ Événement du joueur");
+        Component customName = getNonItalicComponent("<dark_aqua>→ Événement du joueur");
         itemMeta.customName(customName);
         itemMeta.lore(
             List.of(
-                getNonItalicComponent("<dark_gray>» <blue>Exécute <gray>une ligne des <gold>blocs de code <gray>lorsque"),
-                getNonItalicComponent("<dark_gray>» <gray>le <yellow>joueur <light_purple>déclenche <gray>l'<dark_purple>événement <gray>spécifié")
+                getNonItalicComponent("<dark_gray>» <blue>Exécute <gray>une ligne des <aqua>blocs de code <gray>lorsque"),
+                getNonItalicComponent("<dark_gray>» <gray>le <light_purple>joueur <dark_purple>déclenche l'événement <gray>spécifié")
             )
         );
         itemMeta.setEnchantmentGlintOverride(true);

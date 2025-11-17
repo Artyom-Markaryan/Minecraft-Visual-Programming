@@ -9,15 +9,15 @@ import java.util.List;
 
 public class DefineVariableCodeBlock extends ItemStack implements PluginItem {
     public DefineVariableCodeBlock() {
-        super(Material.RAW_GOLD_BLOCK);
+        super(Material.WAXED_COPPER_BLOCK);
 
         ItemMeta itemMeta = super.getItemMeta();
-        Component customName = getNonItalicComponent("<gold>⚅ Définir une variable");
+        Component customName = getNonItalicComponent("<gold>✘ Définir une variable");
         itemMeta.customName(customName);
         itemMeta.lore(
             List.of(
-                getNonItalicComponent("<dark_gray>» <blue>Définit <gray>une <gold>variable <gray>avec"),
-                getNonItalicComponent("<dark_gray>» <gray>une <yellow>valeur <gray>réutilisable")
+                getNonItalicComponent("<dark_gray>» <blue>Définit <gray>une <gold>variable <gray>qui stocke une <yellow>valeur "),
+                getNonItalicComponent("<dark_gray>» <gray>et qui peut être <dark_green>réutilisée et modifiée")
             )
         );
         itemMeta.setEnchantmentGlintOverride(true);

@@ -16,8 +16,8 @@ public class ValuesItem extends ItemStack implements PluginItem {
         itemMeta.customName(customName);
         itemMeta.lore(
             List.of(
-                getNonItalicComponent("<dark_gray>» <gold><underlined><key:key.use></underlined> <gray>pour ouvrir le menu"),
-                getNonItalicComponent("<dark_gray>» <gray>des valeurs")
+                getNonItalicComponent("<dark_gray>» <green><underlined><key:key.use></underlined> <gray>pour ouvrir le menu"),
+                getNonItalicComponent("<dark_gray>» <gray>des <yellow>valeurs")
             )
         );
         itemMeta.setEnchantmentGlintOverride(true);

@@ -9,14 +9,14 @@ import java.util.List;
 
 public class ELSECodeBlock extends ItemStack implements PluginItem {
     public ELSECodeBlock() {
-        super(Material.END_STONE_BRICKS);
+        super(Material.DEEPSLATE_BRICKS);
 
         ItemMeta itemMeta = super.getItemMeta();
-        Component customName = getNonItalicComponent("<red>→ SINON");
+        Component customName = getNonItalicComponent("<red>≠ SINON");
         itemMeta.customName(customName);
         itemMeta.lore(
             List.of(
-                getNonItalicComponent("<dark_gray>» <blue>Exécute <gray>les <gold>blocs de code <gray>à l'intérieur"),
+                getNonItalicComponent("<dark_gray>» <blue>Exécute <gray>les <aqua>blocs de code <gray>à l'intérieur"),
                 getNonItalicComponent("<dark_gray>» <gray>des <gold>blocs accolades <gray>si la <yellow>condition"),
                 getNonItalicComponent("<dark_gray>» <gray>spécifiée est <red>fausse")
             )

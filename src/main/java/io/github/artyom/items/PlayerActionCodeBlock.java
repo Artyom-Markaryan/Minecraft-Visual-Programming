@@ -9,14 +9,14 @@ import java.util.List;
 
 public class PlayerActionCodeBlock extends ItemStack implements PluginItem {
     public PlayerActionCodeBlock() {
-        super(Material.CYAN_WOOL);
+        super(Material.DIAMOND_ORE);
 
         ItemMeta itemMeta = super.getItemMeta();
-        Component customName = getNonItalicComponent("<dark_aqua>☃ Action du joueur");
+        Component customName = getNonItalicComponent("<dark_aqua>∀ Action du joueur");
         itemMeta.customName(customName);
         itemMeta.lore(
             List.of(
-                getNonItalicComponent("<dark_gray>» <blue>Effectue <gray>une <dark_purple>action <gray>liée au <yellow>joueur")
+                getNonItalicComponent("<dark_gray>» <blue>Effectue <gray>une <dark_purple>action <gray>liée au <light_purple>joueur")
             )
         );
         itemMeta.setEnchantmentGlintOverride(true);
