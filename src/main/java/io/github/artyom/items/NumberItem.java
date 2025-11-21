@@ -7,17 +7,17 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.List;
 
-public class DefineVariableCodeBlock extends ItemStack implements PluginItem {
-    public DefineVariableCodeBlock() {
-        super(Material.WAXED_COPPER_BLOCK);
+public class NumberItem extends ItemStack implements PluginItem {
+    public NumberItem() {
+        super(Material.SLIME_BALL);
 
         ItemMeta itemMeta = super.getItemMeta();
-        Component customName = getNonItalicComponent("<gold>✘ Définir une variable");
+        Component customName = getNonItalicComponent("<red>⅔ Nombre");
         itemMeta.customName(customName);
         itemMeta.lore(
             List.of(
-                getNonItalicComponent("<dark_gray>» <blue>Définit <gray>une <gold>variable <gray>qui stocke une <yellow>valeur"),
-                getNonItalicComponent("<dark_gray>» <gray>et qui peut être <dark_green>réutilisée et modifiée")
+                getNonItalicComponent("<dark_gray>» <gray>Un type de <yellow>valeur <gray>qui supporte un <red>nombre"),
+                getNonItalicComponent("<dark_gray>» <gray>Peut être utilisé dans <dark_green>les fonctions mathématiques")
             )
         );
         itemMeta.setEnchantmentGlintOverride(true);

@@ -2,8 +2,10 @@ package io.github.artyom.listeners;
 
 import io.github.artyom.MinecraftVisualProgramming;
 import io.github.artyom.inventories.CodeBlocksMenu;
+import io.github.artyom.inventories.ValuesMenu;
 import io.github.artyom.items.CloseMenuItem;
 import io.github.artyom.items.CodeBlocksItem;
+import io.github.artyom.items.ValuesItem;
 import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -46,9 +48,14 @@ public class PlayerEvents implements Listener {
         Player player = playerInteractEvent.getPlayer();
         ItemStack eventItem = player.getInventory().getItemInMainHand();
         ItemStack codeBlocksItem = new CodeBlocksItem();
+        ItemStack valuesItem = new ValuesItem();
         if (eventItem.equals(codeBlocksItem)) {
             CodeBlocksMenu codeBlocksMenu = new CodeBlocksMenu();
             codeBlocksMenu.open(player);
+        }
+        if (eventItem.equals(valuesItem)) {
+            ValuesMenu valuesMenu = new ValuesMenu();
+            valuesMenu.open(player);
         }
     }
 
@@ -56,7 +63,7 @@ public class PlayerEvents implements Listener {
     public void onInventoryClick(InventoryClickEvent inventoryClickEvent) {
         Player player = (Player) inventoryClickEvent.getWhoClicked();
         PersistentDataContainer persistentDataContainer = player.getPersistentDataContainer();
-        if (persistentDataContainer.has(CodeBlocksMenu.KEY)) {
+        if (persistentDataContainer.has(CodeBlocksMenu.KEY) || persistentDataContainer.has(ValuesMenu.KEY)) {
             inventoryClickEvent.setCancelled(true);
 
             Inventory clickedInventory = inventoryClickEvent.getClickedInventory();
@@ -81,5 +88,7 @@ public class PlayerEvents implements Listener {
         PersistentDataContainer persistentDataContainer = player.getPersistentDataContainer();
         if (persistentDataContainer.has(CodeBlocksMenu.KEY))
             persistentDataContainer.remove(CodeBlocksMenu.KEY);
+        if (persistentDataContainer.has(ValuesMenu.KEY))
+            persistentDataContainer.remove(ValuesMenu.KEY);
     }
 }

@@ -7,16 +7,16 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.List;
 
-public class DefineVariableCodeBlock extends ItemStack implements PluginItem {
-    public DefineVariableCodeBlock() {
-        super(Material.WAXED_COPPER_BLOCK);
+public class VariableItem extends ItemStack implements PluginItem {
+    public VariableItem() {
+        super(Material.MAGMA_CREAM);
 
         ItemMeta itemMeta = super.getItemMeta();
-        Component customName = getNonItalicComponent("<gold>✘ Définir une variable");
+        Component customName = getNonItalicComponent("<gold>✘ Variable");
         itemMeta.customName(customName);
         itemMeta.lore(
             List.of(
-                getNonItalicComponent("<dark_gray>» <blue>Définit <gray>une <gold>variable <gray>qui stocke une <yellow>valeur"),
+                getNonItalicComponent("<dark_gray>» <gray>Une <gold>variable <gray>qui stocke une <yellow>valeur"),
                 getNonItalicComponent("<dark_gray>» <gray>et qui peut être <dark_green>réutilisée et modifiée")
             )
         );
