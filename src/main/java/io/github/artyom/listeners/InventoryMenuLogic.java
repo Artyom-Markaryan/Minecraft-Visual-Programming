@@ -1,8 +1,8 @@
 package io.github.artyom.listeners;
 
-import io.github.artyom.inventories.CodeBlocksMenu;
-import io.github.artyom.inventories.ValuesMenu;
-import io.github.artyom.items.CloseMenuItem;
+import io.github.artyom.inventorymenus.CodeBlocksMenu;
+import io.github.artyom.inventorymenus.ValuesMenu;
+import io.github.artyom.inventorymenus.buttons.CloseButton;
 import io.github.artyom.items.CodeBlocksItem;
 import io.github.artyom.items.ValuesItem;
 import org.bukkit.entity.Player;
@@ -50,7 +50,7 @@ public class InventoryMenuLogic implements Listener {
             ItemStack eventItem = inventoryClickEvent.getCurrentItem();
             if (eventItem == null) return;
 
-            if (eventItem.equals(new CloseMenuItem())) {
+            if (eventItem.equals(new CloseButton())) {
                 clickedInventory.close();
                 return;
             }

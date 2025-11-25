@@ -2,7 +2,7 @@ package io.github.artyom.listeners;
 
 import io.github.artyom.MinecraftVisualProgramming;
 import io.github.artyom.exceptions.NotEnoughSpaceException;
-import io.github.artyom.items.*;
+import io.github.artyom.items.codeblocks.*;
 import net.kyori.adventure.text.Component;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;

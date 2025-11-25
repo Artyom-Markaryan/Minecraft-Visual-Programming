@@ -1,7 +1,8 @@
-package io.github.artyom.inventories;
+package io.github.artyom.inventorymenus;
 
 import io.github.artyom.MinecraftVisualProgramming;
-import io.github.artyom.items.*;
+import io.github.artyom.inventorymenus.buttons.CloseButton;
+import io.github.artyom.items.codeblocks.*;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
@@ -33,7 +34,7 @@ public class CodeBlocksMenu implements InventoryMenu {
         for (ItemStack codeBlock : codeBlocks)
             codeBlocksMenu.addItem(codeBlock);
         int thirdRowCenterIndex = 22;
-        codeBlocksMenu.setItem(thirdRowCenterIndex, new CloseMenuItem());
+        codeBlocksMenu.setItem(thirdRowCenterIndex, new CloseButton());
 
         player.openInventory(codeBlocksMenu);
         player.playSound(player.getLocation(), "block.note_block.harp", 1, 1);

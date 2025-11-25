@@ -1,4 +1,4 @@
-package io.github.artyom.items;
+package io.github.artyom.items.codeblocks;
 
 import io.github.artyom.exceptions.NotEnoughSpaceException;
 import net.kyori.adventure.text.Component;

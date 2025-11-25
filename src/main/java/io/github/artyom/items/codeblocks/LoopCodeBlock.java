@@ -1,6 +1,7 @@
-package io.github.artyom.items;
+package io.github.artyom.items.codeblocks;
 
 import io.github.artyom.exceptions.NotEnoughSpaceException;
+import io.github.artyom.items.PluginItem;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
 import org.bukkit.block.Block;

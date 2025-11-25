@@ -1,10 +1,10 @@
-package io.github.artyom.inventories;
+package io.github.artyom.inventorymenus;
 
 import io.github.artyom.MinecraftVisualProgramming;
-import io.github.artyom.items.CloseMenuItem;
-import io.github.artyom.items.NumberItem;
-import io.github.artyom.items.TextItem;
-import io.github.artyom.items.VariableItem;
+import io.github.artyom.inventorymenus.buttons.CloseButton;
+import io.github.artyom.items.values.NumberItem;
+import io.github.artyom.items.values.TextItem;
+import io.github.artyom.items.values.VariableItem;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
@@ -33,7 +33,7 @@ public class ValuesMenu implements InventoryMenu {
         for (ItemStack value : values)
             valuesMenu.addItem(value);
         int secondRowCenterIndex = 13;
-        valuesMenu.setItem(secondRowCenterIndex, new CloseMenuItem());
+        valuesMenu.setItem(secondRowCenterIndex, new CloseButton());
 
         player.openInventory(valuesMenu);
         player.playSound(player.getLocation(), "block.note_block.harp", 1, 1);

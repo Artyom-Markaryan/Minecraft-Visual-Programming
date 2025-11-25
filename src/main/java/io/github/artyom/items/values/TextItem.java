@@ -1,5 +1,6 @@
-package io.github.artyom.items;
+package io.github.artyom.items.values;
 
+import io.github.artyom.items.PluginItem;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;

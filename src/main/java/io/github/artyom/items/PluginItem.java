@@ -4,7 +4,7 @@ import io.github.artyom.MinecraftVisualProgramming;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextDecoration;
 
-interface PluginItem {
+public interface PluginItem {
     default Component getNonItalicComponent(String inputString) {
         return MinecraftVisualProgramming.MINI_MESSAGE
             .deserialize(inputString)
