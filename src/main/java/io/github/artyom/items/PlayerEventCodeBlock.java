@@ -2,12 +2,8 @@ package io.github.artyom.items;
 
 import io.github.artyom.exceptions.NotEnoughSpaceException;
 import net.kyori.adventure.text.Component;
-import org.bukkit.DyeColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.block.Sign;
-import org.bukkit.block.data.Directional;
-import org.bukkit.block.sign.Side;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -40,20 +36,7 @@ public class PlayerEventCodeBlock extends ItemStack implements PluginItem, CodeB
         );
         checkSurroundingBlocks(surroundingBlocks);
 
-        Block separatorBlock = surroundingBlocks.getFirst();
-        separatorBlock.setType(Material.STONE);
-
-        Block signBlock = surroundingBlocks.get(1);
-        signBlock.setType(Material.OAK_WALL_SIGN);
-        Directional signBlockData = (Directional) signBlock.getBlockData();
-        signBlockData.setFacing(player.getFacing().getOppositeFace());
-        signBlock.setBlockData(signBlockData);
-        Sign signBlockState = (Sign) signBlock.getState();
-        signBlockState.getSide(Side.FRONT).line(0, Component.text("[⧈] → JOUEUR"));
-        signBlockState.getSide(Side.FRONT).line(1, Component.text("Non défini"));
-        signBlockState.getSide(Side.FRONT).setColor(DyeColor.WHITE);
-        signBlockState.getSide(Side.FRONT).setGlowingText(true);
-        signBlockState.setWaxed(true);
-        signBlockState.update();
+        placeSeparatorBlock(block, player);
+        placeSignBlock(block, player, "[⧈] → JOUEUR");
     }
 }
