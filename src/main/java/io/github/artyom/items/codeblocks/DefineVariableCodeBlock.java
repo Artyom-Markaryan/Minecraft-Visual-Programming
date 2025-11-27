@@ -1,9 +1,11 @@
 package io.github.artyom.items.codeblocks;
 
+import io.github.artyom.MinecraftVisualProgramming;
 import io.github.artyom.exceptions.NotEnoughSpaceException;
 import io.github.artyom.items.PluginItem;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
@@ -13,6 +15,8 @@ import org.bukkit.inventory.meta.ItemMeta;
 import java.util.List;
 
 public class DefineVariableCodeBlock extends ItemStack implements PluginItem, CodeBlock {
+    private static final NamespacedKey KEY = new NamespacedKey(MinecraftVisualProgramming.getInstance(), "DefineVariableCodeBlock");
+
     public DefineVariableCodeBlock() {
         super(Material.WAXED_COPPER_BLOCK);
 
@@ -36,12 +40,13 @@ public class DefineVariableCodeBlock extends ItemStack implements PluginItem, Co
         List<Block> surroundingBlocks = List.of(
             block.getRelative(rightOf(player.getFacing()), 1),
             block.getRelative(player.getFacing().getOppositeFace(), 1),
+            block.getRelative(rightOf(player.getFacing()), 1).getRelative(player.getFacing().getOppositeFace(), 1),
             block.getRelative(BlockFace.UP, 1)
         );
         checkSurroundingBlocks(surroundingBlocks);
 
         placeSeparatorBlock(block, player);
-        placeSignBlock(block, player, "[⧈] ✘");
+        placeSignBlock(block, player, "[⧈] ✘", KEY);
         placeChestBlock(block, player);
     }
 }

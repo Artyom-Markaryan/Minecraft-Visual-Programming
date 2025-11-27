@@ -1,9 +1,11 @@
 package io.github.artyom.items.codeblocks;
 
+import io.github.artyom.MinecraftVisualProgramming;
 import io.github.artyom.exceptions.NotEnoughSpaceException;
 import io.github.artyom.items.PluginItem;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -12,11 +14,13 @@ import org.bukkit.inventory.meta.ItemMeta;
 import java.util.List;
 
 public class PlayerEventCodeBlock extends ItemStack implements PluginItem, CodeBlock {
+    private static final NamespacedKey KEY = new NamespacedKey(MinecraftVisualProgramming.getInstance(), "PlayerEventCodeBlock");
+
     public PlayerEventCodeBlock() {
         super(Material.DIAMOND_BLOCK);
 
         ItemMeta itemMeta = super.getItemMeta();
-        Component customName = getNonItalicComponent("<dark_aqua>→ Événement du joueur");
+        Component customName = getNonItalicComponent("<dark_aqua>⚡ Événement du joueur");
         itemMeta.customName(customName);
         itemMeta.lore(
             List.of(
@@ -33,11 +37,12 @@ public class PlayerEventCodeBlock extends ItemStack implements PluginItem, CodeB
     public void onBlockPlace(Block block, Player player) throws NotEnoughSpaceException {
         List<Block> surroundingBlocks = List.of(
             block.getRelative(rightOf(player.getFacing()), 1),
-            block.getRelative(player.getFacing().getOppositeFace(), 1)
+            block.getRelative(player.getFacing().getOppositeFace(), 1),
+            block.getRelative(rightOf(player.getFacing()), 1).getRelative(player.getFacing().getOppositeFace(), 1)
         );
         checkSurroundingBlocks(surroundingBlocks);
 
         placeSeparatorBlock(block, player);
-        placeSignBlock(block, player, "[⧈] → JOUEUR");
+        placeSignBlock(block, player, "[⧈] ⚡ JOUEUR", KEY);
     }
 }
