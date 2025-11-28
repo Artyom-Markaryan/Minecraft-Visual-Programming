@@ -2,7 +2,7 @@ package io.github.artyom.items.codeblocks;
 
 import io.github.artyom.MinecraftVisualProgramming;
 import io.github.artyom.exceptions.NotEnoughSpaceException;
-import io.github.artyom.items.PluginItem;
+import io.github.artyom.items.ServerItem;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -14,20 +14,20 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.List;
 
-public class IFConditionCodeBlock extends ItemStack implements PluginItem, CodeBlock {
+public class IFConditionCodeBlock extends ItemStack implements CodeBlock {
     private static final NamespacedKey KEY = new NamespacedKey(MinecraftVisualProgramming.getInstance(), "IFConditionCodeBlock");
 
     public IFConditionCodeBlock() {
         super(Material.END_STONE_BRICKS);
 
         ItemMeta itemMeta = super.getItemMeta();
-        Component customName = getNonItalicComponent("<yellow>⇒ SI Condition");
+        Component customName = ServerItem.getNonItalicComponent("<yellow>⇒ SI Condition");
         itemMeta.customName(customName);
         itemMeta.lore(
             List.of(
-                getNonItalicComponent("<dark_gray>» <blue>Exécute <gray>les <aqua>blocs de code <gray>à l'intérieur"),
-                getNonItalicComponent("<dark_gray>» <gray>des <gold>blocs accolades <gray>si la <yellow>condition"),
-                getNonItalicComponent("<dark_gray>» <gray>spécifiée est <green>vraie")
+                ServerItem.getNonItalicComponent("<dark_gray>» <blue>Exécute <gray>les <aqua>blocs de code <gray>à l'intérieur"),
+                ServerItem.getNonItalicComponent("<dark_gray>» <gray>des <gold>blocs accolades <gray>si la <yellow>condition"),
+                ServerItem.getNonItalicComponent("<dark_gray>» <gray>spécifiée est <green>vraie")
             )
         );
         itemMeta.setEnchantmentGlintOverride(true);
@@ -38,17 +38,17 @@ public class IFConditionCodeBlock extends ItemStack implements PluginItem, CodeB
     @Override
     public void onBlockPlace(Block block, Player player) throws NotEnoughSpaceException {
         List<Block> surroundingBlocks = List.of(
-            block.getRelative(rightOf(player.getFacing()), 1),
-            block.getRelative(rightOf(player.getFacing()), 2),
+            block.getRelative(CodeBlockBuilder.rightOf(player.getFacing()), 1),
+            block.getRelative(CodeBlockBuilder.rightOf(player.getFacing()), 2),
             block.getRelative(player.getFacing().getOppositeFace(), 1),
-            block.getRelative(rightOf(player.getFacing()), 1).getRelative(player.getFacing().getOppositeFace(), 1),
-            block.getRelative(rightOf(player.getFacing()), 2).getRelative(player.getFacing().getOppositeFace(), 1),
+            block.getRelative(CodeBlockBuilder.rightOf(player.getFacing()), 1).getRelative(player.getFacing().getOppositeFace(), 1),
+            block.getRelative(CodeBlockBuilder.rightOf(player.getFacing()), 2).getRelative(player.getFacing().getOppositeFace(), 1),
             block.getRelative(BlockFace.UP, 1)
         );
-        checkSurroundingBlocks(surroundingBlocks);
+        CodeBlockBuilder.checkSurroundingBlocks(surroundingBlocks);
 
-        placeBracketBlocks(block, player, Material.PISTON);
-        placeSignBlock(block, player, "[⧈] ⇒", KEY);
-        placeChestBlock(block, player);
+        CodeBlockBuilder.placeBracketBlocks(block, player, Material.PISTON);
+        CodeBlockBuilder.placeSignBlock(block, player, "[⧈] ⇒", KEY);
+        CodeBlockBuilder.placeChestBlock(block, player);
     }
 }

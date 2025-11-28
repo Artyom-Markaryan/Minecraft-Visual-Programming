@@ -7,17 +7,17 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.List;
 
-public class CodeBlocksItem extends ItemStack implements PluginItem {
+public class CodeBlocksItem extends ItemStack {
     public CodeBlocksItem() {
         super(Material.ENCHANTED_BOOK);
 
         ItemMeta itemMeta = super.getItemMeta();
-        Component customName = getNonItalicComponent("<aqua>⧈ Blocs de code");
+        Component customName = ServerItem.getNonItalicComponent("<aqua>⧈ Blocs de code");
         itemMeta.customName(customName);
         itemMeta.lore(
             List.of(
-                getNonItalicComponent("<dark_gray>» <green><underlined><key:key.use></underlined> <gray>pour ouvrir le menu"),
-                getNonItalicComponent("<dark_gray>» <gray>des <aqua>blocs de code")
+                ServerItem.getNonItalicComponent("<dark_gray>» <green><underlined><key:key.use></underlined> <gray>pour ouvrir le menu"),
+                ServerItem.getNonItalicComponent("<dark_gray>» <gray>des <aqua>blocs de code")
             )
         );
         itemMeta.setEnchantmentGlintOverride(true);

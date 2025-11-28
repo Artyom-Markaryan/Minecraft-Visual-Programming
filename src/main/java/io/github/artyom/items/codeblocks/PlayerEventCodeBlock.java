@@ -2,7 +2,7 @@ package io.github.artyom.items.codeblocks;
 
 import io.github.artyom.MinecraftVisualProgramming;
 import io.github.artyom.exceptions.NotEnoughSpaceException;
-import io.github.artyom.items.PluginItem;
+import io.github.artyom.items.ServerItem;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -13,19 +13,19 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.List;
 
-public class PlayerEventCodeBlock extends ItemStack implements PluginItem, CodeBlock {
+public class PlayerEventCodeBlock extends ItemStack implements CodeBlock {
     private static final NamespacedKey KEY = new NamespacedKey(MinecraftVisualProgramming.getInstance(), "PlayerEventCodeBlock");
 
     public PlayerEventCodeBlock() {
         super(Material.DIAMOND_BLOCK);
 
         ItemMeta itemMeta = super.getItemMeta();
-        Component customName = getNonItalicComponent("<dark_aqua>⚡ Événement du joueur");
+        Component customName = ServerItem.getNonItalicComponent("<dark_aqua>⚡ Événement du joueur");
         itemMeta.customName(customName);
         itemMeta.lore(
             List.of(
-                getNonItalicComponent("<dark_gray>» <blue>Exécute <gray>une ligne des <aqua>blocs de code <gray>lorsque"),
-                getNonItalicComponent("<dark_gray>» <gray>le <light_purple>joueur <dark_purple>déclenche l'événement <gray>spécifié")
+                ServerItem.getNonItalicComponent("<dark_gray>» <blue>Exécute <gray>une ligne des <aqua>blocs de code <gray>lorsque"),
+                ServerItem.getNonItalicComponent("<dark_gray>» <gray>le <light_purple>joueur <dark_purple>déclenche l'événement <gray>spécifié")
             )
         );
         itemMeta.setEnchantmentGlintOverride(true);
@@ -36,13 +36,13 @@ public class PlayerEventCodeBlock extends ItemStack implements PluginItem, CodeB
     @Override
     public void onBlockPlace(Block block, Player player) throws NotEnoughSpaceException {
         List<Block> surroundingBlocks = List.of(
-            block.getRelative(rightOf(player.getFacing()), 1),
+            block.getRelative(CodeBlockBuilder.rightOf(player.getFacing()), 1),
             block.getRelative(player.getFacing().getOppositeFace(), 1),
-            block.getRelative(rightOf(player.getFacing()), 1).getRelative(player.getFacing().getOppositeFace(), 1)
+            block.getRelative(CodeBlockBuilder.rightOf(player.getFacing()), 1).getRelative(player.getFacing().getOppositeFace(), 1)
         );
-        checkSurroundingBlocks(surroundingBlocks);
+        CodeBlockBuilder.checkSurroundingBlocks(surroundingBlocks);
 
-        placeSeparatorBlock(block, player);
-        placeSignBlock(block, player, "[⧈] ⚡ JOUEUR", KEY);
+        CodeBlockBuilder.placeSeparatorBlock(block, player);
+        CodeBlockBuilder.placeSignBlock(block, player, "[⧈] ⚡ JOUEUR", KEY);
     }
 }

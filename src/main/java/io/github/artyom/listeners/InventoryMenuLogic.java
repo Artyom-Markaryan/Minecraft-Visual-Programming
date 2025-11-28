@@ -45,13 +45,16 @@ public class InventoryMenuLogic implements Listener {
             inventoryClickEvent.setCancelled(true);
 
             Inventory clickedInventory = inventoryClickEvent.getClickedInventory();
-            if (clickedInventory == null || clickedInventory.equals(player.getInventory())) return;
+            if (clickedInventory == null || clickedInventory.equals(player.getInventory()))
+                return;
 
             ItemStack eventItem = inventoryClickEvent.getCurrentItem();
-            if (eventItem == null) return;
+            if (eventItem == null)
+                return;
 
             if (eventItem.equals(new CloseButton())) {
                 clickedInventory.close();
+                player.playSound(player.getLocation(), "block.note_block.harp", 1, 1);
                 return;
             }
 

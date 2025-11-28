@@ -2,7 +2,7 @@ package io.github.artyom.items.codeblocks;
 
 import io.github.artyom.MinecraftVisualProgramming;
 import io.github.artyom.exceptions.NotEnoughSpaceException;
-import io.github.artyom.items.PluginItem;
+import io.github.artyom.items.ServerItem;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -14,18 +14,18 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.List;
 
-public class PlayerActionCodeBlock extends ItemStack implements PluginItem, CodeBlock {
+public class PlayerActionCodeBlock extends ItemStack implements CodeBlock {
     private static final NamespacedKey KEY = new NamespacedKey(MinecraftVisualProgramming.getInstance(), "PlayerActionCodeBlock");
 
     public PlayerActionCodeBlock() {
         super(Material.DIAMOND_ORE);
 
         ItemMeta itemMeta = super.getItemMeta();
-        Component customName = getNonItalicComponent("<dark_aqua>∀ Action du joueur");
+        Component customName = ServerItem.getNonItalicComponent("<dark_aqua>∀ Action du joueur");
         itemMeta.customName(customName);
         itemMeta.lore(
             List.of(
-                getNonItalicComponent("<dark_gray>» <blue>Effectue <gray>une <dark_purple>action <gray>liée au <light_purple>joueur")
+                ServerItem.getNonItalicComponent("<dark_gray>» <blue>Effectue <gray>une <dark_purple>action <gray>liée au <light_purple>joueur")
             )
         );
         itemMeta.setEnchantmentGlintOverride(true);
@@ -36,15 +36,15 @@ public class PlayerActionCodeBlock extends ItemStack implements PluginItem, Code
     @Override
     public void onBlockPlace(Block block, Player player) throws NotEnoughSpaceException {
         List<Block> surroundingBlocks = List.of(
-            block.getRelative(rightOf(player.getFacing()), 1),
+            block.getRelative(CodeBlockBuilder.rightOf(player.getFacing()), 1),
             block.getRelative(player.getFacing().getOppositeFace(), 1),
-            block.getRelative(rightOf(player.getFacing()), 1).getRelative(player.getFacing().getOppositeFace(), 1),
+            block.getRelative(CodeBlockBuilder.rightOf(player.getFacing()), 1).getRelative(player.getFacing().getOppositeFace(), 1),
             block.getRelative(BlockFace.UP, 1)
         );
-        checkSurroundingBlocks(surroundingBlocks);
+        CodeBlockBuilder.checkSurroundingBlocks(surroundingBlocks);
 
-        placeSeparatorBlock(block, player);
-        placeSignBlock(block, player, "[⧈] ∀ JOUEUR", KEY);
-        placeChestBlock(block, player);
+        CodeBlockBuilder.placeSeparatorBlock(block, player);
+        CodeBlockBuilder.placeSignBlock(block, player, "[⧈] ∀ JOUEUR", KEY);
+        CodeBlockBuilder.placeChestBlock(block, player);
     }
 }
