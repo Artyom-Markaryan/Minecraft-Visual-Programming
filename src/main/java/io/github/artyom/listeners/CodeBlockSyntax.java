@@ -20,6 +20,7 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.util.Vector;
 
 import java.util.HashMap;
 import java.util.Set;
@@ -33,20 +34,15 @@ public class CodeBlockSyntax implements Listener {
         new ELSECodeBlock(),
         new LoopCodeBlock()
     );
-    private static final Set<ItemStack> CODE_BLOCKS_WITH_BRACKETS = Set.of(
-        new IFConditionCodeBlock(),
-        new ELSECodeBlock(),
-        new LoopCodeBlock()
-    );
 
     @EventHandler
     public void onPlayerPlaceBlock(BlockPlaceEvent blockPlaceEvent) {
-        ItemStack placedBlock = blockPlaceEvent.getItemInHand();
+        ItemStack eventItem = blockPlaceEvent.getItemInHand();
         Block block = blockPlaceEvent.getBlock();
         Player player = blockPlaceEvent.getPlayer();
 
         CODE_BLOCKS.stream()
-            .filter(placedBlock::isSimilar)
+            .filter(eventItem::isSimilar)
             .findFirst()
             .ifPresent(codeBlock -> {
                 try {
@@ -77,18 +73,16 @@ public class CodeBlockSyntax implements Listener {
 
         Player player = playerInteractEvent.getPlayer();
         try {
-            BlockFace rightOfPlayerFacing = CodeBlockBuilder.rightOf(player.getFacing());
-            BlockFace diagonalRightOfPlayerFacing = CodeBlockBuilder.diagonalRightOf(player.getFacing());
+            BlockFace playerFacing = player.getFacing();
+            BlockFace rightOfPlayerFacing = CodeBlockBuilder.rightOf(playerFacing);
 
-            int offset = this.getOffset(playerInteractEvent.getItem());
-            int[] diagonalOffset = this.getDiagonalOffset(diagonalRightOfPlayerFacing, offset);
+            int offset = this.getOffset(eventItem);
 
-            Location firstCorner = clickedBlock.getLocation().clone().add(
-                rightOfPlayerFacing.getModX(), 0, rightOfPlayerFacing.getModZ()
-            );
-            Location secondCorner = clickedBlock.getLocation().clone().add(
-                diagonalRightOfPlayerFacing.getModX() * diagonalOffset[0], 1, diagonalRightOfPlayerFacing.getModZ() * diagonalOffset[1]
-            );
+            Vector firstCornerDirection = new Vector(rightOfPlayerFacing.getModX(), 0, rightOfPlayerFacing.getModZ());
+            Location firstCorner = clickedBlock.getLocation().clone().add(firstCornerDirection);
+            Vector forwardUpDirection = new Vector(playerFacing.getModX(), 1, playerFacing.getModZ());
+            Vector secondCornerDirection = firstCornerDirection.clone().multiply(offset).add(forwardUpDirection);
+            Location secondCorner = clickedBlock.getLocation().clone().add(secondCornerDirection);
 
             this.pushCodeBlockLine(firstCorner, secondCorner, rightOfPlayerFacing, offset);
             player.playSound(player.getLocation(), Sound.BLOCK_PISTON_EXTEND, 1, 1);
@@ -103,18 +97,15 @@ public class CodeBlockSyntax implements Listener {
 
     }
 
-    private int getOffset(ItemStack placedCodeBlock) {
-        if (CODE_BLOCKS_WITH_BRACKETS.stream().anyMatch(placedCodeBlock::isSimilar))
+    private int getOffset(ItemStack eventItem) {
+        Set<ItemStack> codeBlocksWithBracketBlocks = Set.of(
+            new IFConditionCodeBlock(),
+            new ELSECodeBlock(),
+            new LoopCodeBlock()
+        );
+        if (codeBlocksWithBracketBlocks.stream().anyMatch(eventItem::isSimilar))
             return 3;
         return 2;
-    }
-
-    private int[] getDiagonalOffset(BlockFace diagonalCardinalDirection, int offset) {
-        return switch (diagonalCardinalDirection) {
-            case NORTH_EAST, SOUTH_WEST -> new int[]{offset, 1};
-            case SOUTH_EAST, NORTH_WEST -> new int[]{1, offset};
-            default -> new int[]{0, 0};
-        };
     }
 
     private void pushCodeBlockLine(Location firstCorner, Location secondCorner, BlockFace direction, int offset) throws ObstacleException, OutsideOfWorldBorderException {

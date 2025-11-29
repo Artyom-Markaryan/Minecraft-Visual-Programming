@@ -128,16 +128,6 @@ public final class CodeBlockBuilder {
         };
     }
 
-    public static BlockFace diagonalRightOf(BlockFace cardinalDirection) {
-        return switch (cardinalDirection) {
-            case NORTH -> BlockFace.NORTH_EAST;
-            case EAST -> BlockFace.SOUTH_EAST;
-            case SOUTH -> BlockFace.SOUTH_WEST;
-            case WEST -> BlockFace.NORTH_WEST;
-            default -> BlockFace.SELF;
-        };
-    }
-
     private void checkSurroundingLocations(World world, List<Location> surroundingLocations) throws NotEnoughSpaceException, TooCloseToWorldBorderException {
         if (surroundingLocations.stream().anyMatch(location -> location.getBlock().getType() != Material.AIR))
             throw new NotEnoughSpaceException();
