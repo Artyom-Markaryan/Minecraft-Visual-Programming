@@ -11,7 +11,7 @@ public class CloseButton extends ItemStack {
         super(Material.BARRIER);
 
         ItemMeta itemMeta = super.getItemMeta();
-        Component customName = ServerItem.getNonItalicComponent("<red>❌ Fermer");
+        Component customName = ServerItem.getNonItalicComponent("<red>✗ Fermer");
         itemMeta.customName(customName);
         itemMeta.setMaxStackSize(1);
         this.setItemMeta(itemMeta);

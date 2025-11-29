@@ -23,34 +23,42 @@ public final class CodeBlockBuilder {
     public static void placeSeparatorBlock(Block codeBlock, Player player) {
         Block separatorBlock = codeBlock.getRelative(rightOf(player.getFacing()), 1);
         separatorBlock.setType(Material.OBSERVER);
+
         Directional separatorBlockData = (Directional) separatorBlock.getBlockData();
         separatorBlockData.setFacing(leftOf(player.getFacing()));
         separatorBlock.setBlockData(separatorBlockData);
+
         placeSignBlock(separatorBlock, player, "[⧈] →", SEPARATOR_BLOCK_KEY);
     }
 
     public static void placeBracketBlocks(Block codeBlock, Player player, Material bracketBlock) {
         Block openingBracketBlock = codeBlock.getRelative(rightOf(player.getFacing()), 1);
         openingBracketBlock.setType(bracketBlock);
+
         Directional openingBracketBlockData = (Directional) openingBracketBlock.getBlockData();
         openingBracketBlockData.setFacing(rightOf(player.getFacing()));
         openingBracketBlock.setBlockData(openingBracketBlockData);
+
         placeSignBlock(openingBracketBlock, player, "[⧈] {", SEPARATOR_BLOCK_KEY);
 
         Block closingBracketBlock = codeBlock.getRelative(rightOf(player.getFacing()), 2);
         closingBracketBlock.setType(bracketBlock);
+
         Directional closingBracketBlockData = (Directional) closingBracketBlock.getBlockData();
         closingBracketBlockData.setFacing(leftOf(player.getFacing()));
         closingBracketBlock.setBlockData(closingBracketBlockData);
+
         placeSignBlock(closingBracketBlock, player, "[⧈] }", SEPARATOR_BLOCK_KEY);
     }
 
     public static void placeSignBlock(Block codeBlock, Player player, String signTitle, NamespacedKey key) {
         Block signBlock = codeBlock.getRelative(player.getFacing().getOppositeFace(), 1);
         signBlock.setType(Material.OAK_WALL_SIGN);
+
         Directional signBlockData = (Directional) signBlock.getBlockData();
         signBlockData.setFacing(player.getFacing().getOppositeFace());
         signBlock.setBlockData(signBlockData);
+
         Sign signBlockState = (Sign) signBlock.getState();
         signBlockState.getSide(Side.FRONT).line(0, Component.text(signTitle));
         signBlockState.getSide(Side.FRONT).setColor(DyeColor.WHITE);
@@ -63,9 +71,11 @@ public final class CodeBlockBuilder {
     public static void placeChestBlock(Block codeBlock, Player player) {
         Block chestBlock = codeBlock.getRelative(BlockFace.UP, 1);
         chestBlock.setType(Material.CHEST);
+
         Directional chestBlockData = (Directional) chestBlock.getBlockData();
         chestBlockData.setFacing(player.getFacing().getOppositeFace());
         chestBlock.setBlockData(chestBlockData);
+
         Chest chestBlockState = (Chest) chestBlock.getState();
         chestBlockState.customName(Component.text("Coffre de paramètres"));
         chestBlockState.update();
@@ -74,8 +84,8 @@ public final class CodeBlockBuilder {
     public static BlockFace rightOf(BlockFace cardinalDirection) {
         return switch (cardinalDirection) {
             case NORTH -> BlockFace.EAST;
-            case SOUTH -> BlockFace.WEST;
             case EAST -> BlockFace.SOUTH;
+            case SOUTH -> BlockFace.WEST;
             case WEST -> BlockFace.NORTH;
             default -> BlockFace.SELF;
         };
@@ -84,9 +94,19 @@ public final class CodeBlockBuilder {
     public static BlockFace leftOf(BlockFace cardinalDirection) {
         return switch (cardinalDirection) {
             case NORTH -> BlockFace.WEST;
-            case SOUTH -> BlockFace.EAST;
             case EAST -> BlockFace.NORTH;
+            case SOUTH -> BlockFace.EAST;
             case WEST -> BlockFace.SOUTH;
+            default -> BlockFace.SELF;
+        };
+    }
+
+    public static BlockFace diagonalRightOf(BlockFace cardinalDirection) {
+        return switch (cardinalDirection) {
+            case NORTH -> BlockFace.NORTH_EAST;
+            case EAST -> BlockFace.SOUTH_EAST;
+            case SOUTH -> BlockFace.SOUTH_WEST;
+            case WEST -> BlockFace.NORTH_WEST;
             default -> BlockFace.SELF;
         };
     }

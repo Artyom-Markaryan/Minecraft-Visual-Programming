@@ -2,15 +2,24 @@ package io.github.artyom.listeners;
 
 import io.github.artyom.MinecraftVisualProgramming;
 import io.github.artyom.exceptions.NotEnoughSpaceException;
+import io.github.artyom.exceptions.ObstacleException;
+import io.github.artyom.exceptions.OutsideOfWorldBorderException;
 import io.github.artyom.items.codeblocks.*;
 import net.kyori.adventure.text.Component;
-import org.bukkit.block.Block;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.World;
+import org.bukkit.block.*;
+import org.bukkit.block.sign.Side;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.HashMap;
 import java.util.Set;
 
 public class CodeBlockSyntax implements Listener {
@@ -22,14 +31,22 @@ public class CodeBlockSyntax implements Listener {
         new ELSECodeBlock(),
         new LoopCodeBlock()
     );
+    private static final Set<ItemStack> CODE_BLOCKS_WITH_BRACKETS = Set.of(
+        new IFConditionCodeBlock(),
+        new ELSECodeBlock(),
+        new LoopCodeBlock()
+    );
 
     @EventHandler
     public void onPlayerPlaceBlock(BlockPlaceEvent blockPlaceEvent) {
         ItemStack placedBlock = blockPlaceEvent.getItemInHand();
         Block block = blockPlaceEvent.getBlock();
         Player player = blockPlaceEvent.getPlayer();
-        for (ItemStack codeBlock : CODE_BLOCKS) {
-            if (placedBlock.isSimilar(codeBlock)) {
+
+        CODE_BLOCKS.stream()
+            .filter(placedBlock::isSimilar)
+            .findFirst()
+            .ifPresent(codeBlock -> {
                 try {
                     CodeBlock placedCodeBlock = (CodeBlock) codeBlock;
                     placedCodeBlock.onBlockPlace(block, player);
@@ -38,13 +55,147 @@ public class CodeBlockSyntax implements Listener {
                     Component exceptionMessage = MinecraftVisualProgramming.MINI_MESSAGE.deserialize("<red>" + e.getMessage());
                     player.sendActionBar(exceptionMessage);
                 }
-                break;
-            }
+            });
+    }
+
+    @EventHandler
+    public void onPlayerRightClick(PlayerInteractEvent playerInteractEvent) {
+        Action action = playerInteractEvent.getAction();
+        Block clickedBlock = playerInteractEvent.getClickedBlock();
+        if (action != Action.RIGHT_CLICK_BLOCK || clickedBlock == null)
+            return;
+
+        if (!(clickedBlock.getState() instanceof Sign signBlockState) ||
+            !signBlockState.getPersistentDataContainer().has(CodeBlockBuilder.SEPARATOR_BLOCK_KEY))
+            return;
+
+        ItemStack eventItem = playerInteractEvent.getItem();
+        if (eventItem == null || CODE_BLOCKS.stream().noneMatch(eventItem::isSimilar))
+            return;
+
+        Player player = playerInteractEvent.getPlayer();
+        try {
+            BlockFace rightOfPlayerFacing = CodeBlockBuilder.rightOf(player.getFacing());
+            BlockFace diagonalRightOfPlayerFacing = CodeBlockBuilder.diagonalRightOf(player.getFacing());
+
+            int offset = getOffset(playerInteractEvent.getItem());
+            int[] diagonalOffset = getDiagonalOffset(diagonalRightOfPlayerFacing, offset);
+
+            Location firstCorner = clickedBlock.getLocation().clone().add(
+                rightOfPlayerFacing.getModX(), 0, rightOfPlayerFacing.getModZ()
+            );
+            Location secondCorner = clickedBlock.getLocation().clone().add(
+                diagonalRightOfPlayerFacing.getModX() * diagonalOffset[0], 1, diagonalRightOfPlayerFacing.getModZ() * diagonalOffset[1]
+            );
+
+            pushCodeBlockLine(firstCorner, secondCorner, rightOfPlayerFacing, offset);
+        } catch (ObstacleException | OutsideOfWorldBorderException e) {
+            Component exceptionMessage = MinecraftVisualProgramming.MINI_MESSAGE.deserialize("<red>" + e.getMessage());
+            player.sendActionBar(exceptionMessage);
         }
     }
 
     @EventHandler
     public void onPlayerBreakBlock(BlockPlaceEvent blockPlaceEvent) {
 
+    }
+
+    private int getOffset(ItemStack placedCodeBlock) {
+        if (CODE_BLOCKS_WITH_BRACKETS.stream().anyMatch(placedCodeBlock::isSimilar))
+            return 3;
+        return 2;
+    }
+
+    private int[] getDiagonalOffset(BlockFace diagonalCardinalDirection, int offset) {
+        return switch (diagonalCardinalDirection) {
+            case NORTH_EAST, SOUTH_WEST -> new int[]{offset, 1};
+            case SOUTH_EAST, NORTH_WEST -> new int[]{1, offset};
+            default -> new int[]{0, 0};
+        };
+    }
+
+    private void pushCodeBlockLine(Location firstCorner, Location secondCorner, BlockFace direction, int offset)
+        throws ObstacleException, OutsideOfWorldBorderException {
+        World world = firstCorner.getWorld();
+
+        int minX = Math.min(firstCorner.getBlockX(), secondCorner.getBlockX());
+        int maxX = Math.max(firstCorner.getBlockX(), secondCorner.getBlockX());
+        int minY = Math.min(firstCorner.getBlockY(), secondCorner.getBlockY());
+        int maxY = Math.max(firstCorner.getBlockY(), secondCorner.getBlockY());
+        int minZ = Math.min(firstCorner.getBlockZ(), secondCorner.getBlockZ());
+        int maxZ = Math.max(firstCorner.getBlockZ(), secondCorner.getBlockZ());
+
+        int offsetX = direction.getModX() * offset;
+        int offsetY = direction.getModY() * offset;
+        int offsetZ = direction.getModZ() * offset;
+
+        for (int x = minX; x <= maxX; x++) {
+            for (int y = minY; y <= maxY; y++) {
+                for (int z = minZ; z <= maxZ; z++) {
+                    Location originalLocation = new Location(world, x, y, z);
+                    Block originalBlock = world.getBlockAt(originalLocation);
+                    if (originalBlock.getType() == Material.AIR)
+                        continue;
+
+                    Location targetLocation = originalLocation.clone().add(offsetX, offsetY, offsetZ);
+                    if (!world.getWorldBorder().isInside(targetLocation))
+                        throw new OutsideOfWorldBorderException();
+                    Block targetBlock = world.getBlockAt(targetLocation);
+                    if (targetBlock.getType() == Material.AIR)
+                        continue;
+
+                    boolean isPartOfRegion =
+                        targetBlock.getX() >= minX && targetBlock.getX() <= maxX &&
+                            targetBlock.getY() >= minY && targetBlock.getY() <= maxY &&
+                            targetBlock.getZ() >= minZ && targetBlock.getZ() <= maxZ;
+                    if (!isPartOfRegion)
+                        throw new ObstacleException();
+                }
+            }
+        }
+
+        HashMap<Location, BlockRecord> blocksToPush = new HashMap<>();
+        for (int x = minX; x <= maxX; x++) {
+            for (int y = minY; y <= maxY; y++) {
+                for (int z = minZ; z <= maxZ; z++) {
+                    Location location = new Location(world, x, y, z);
+                    Block block = world.getBlockAt(location);
+
+                    if (block.getType() == Material.AIR)
+                        continue;
+                    blocksToPush.put(location, new BlockRecord(block.getBlockData(), block.getState()));
+                }
+            }
+        }
+
+        for (Location location : blocksToPush.keySet()) {
+            world.getBlockAt(location).setType(Material.AIR, false);
+        }
+
+        for (Location oldLocation : blocksToPush.keySet()) {
+            Location newLocation = oldLocation.clone().add(offsetX, offsetY, offsetZ);
+            Block newBlock = world.getBlockAt(newLocation);
+
+            BlockRecord oldBlockRecord = blocksToPush.get(oldLocation);
+            newBlock.setType(oldBlockRecord.blockData().getMaterial());
+            newBlock.setBlockData(oldBlockRecord.blockData());
+
+            BlockState oldBlockState = oldBlockRecord.blockState();
+            if (oldBlockState instanceof Sign oldSignBlockState) {
+                Sign newSignBlockState = (Sign) newBlock.getState();
+                for (int i = 0; i < 4; i++) {
+                    newSignBlockState.getSide(Side.FRONT).line(i, oldSignBlockState.getSide(Side.FRONT).line(i));
+                    newSignBlockState.getSide(Side.FRONT).setColor(oldSignBlockState.getSide(Side.FRONT).getColor());
+                    newSignBlockState.getSide(Side.FRONT).setGlowingText(oldSignBlockState.getSide(Side.FRONT).isGlowingText());
+                    newSignBlockState.setWaxed(oldSignBlockState.isWaxed());
+                    oldSignBlockState.getPersistentDataContainer().copyTo(newSignBlockState.getPersistentDataContainer(), true);
+                    newSignBlockState.update();
+                }
+            } else if (oldBlockState instanceof Chest oldChestBlockState) {
+                Chest newChestBlockState = (Chest) newBlock.getState();
+                newChestBlockState.customName(oldChestBlockState.customName());
+                newChestBlockState.update();
+            }
+        }
     }
 }
