@@ -7,10 +7,7 @@ import io.github.artyom.exceptions.OutsideOfWorldBorderException;
 import io.github.artyom.exceptions.TooCloseToWorldBorderException;
 import io.github.artyom.items.codeblocks.*;
 import net.kyori.adventure.text.Component;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.Sound;
-import org.bukkit.World;
+import org.bukkit.*;
 import org.bukkit.block.*;
 import org.bukkit.block.sign.Side;
 import org.bukkit.entity.Player;
@@ -76,15 +73,19 @@ public class CodeBlockSyntax implements Listener {
             BlockFace playerFacing = player.getFacing();
             BlockFace rightOfPlayerFacing = CodeBlockBuilder.rightOf(playerFacing);
 
-            int offset = this.getOffset(eventItem);
-
             Vector firstCornerDirection = new Vector(rightOfPlayerFacing.getModX(), 0, rightOfPlayerFacing.getModZ());
             Location firstCorner = clickedBlock.getLocation().clone().add(firstCornerDirection);
+
+            int codeBlockLineLength = this.getCodeBlockLineLength(firstCorner.clone(), firstCornerDirection);
+            if (codeBlockLineLength == 0)
+                return;
+
             Vector forwardUpDirection = new Vector(playerFacing.getModX(), 1, playerFacing.getModZ());
-            Vector secondCornerDirection = firstCornerDirection.clone().multiply(offset).add(forwardUpDirection);
+            Vector secondCornerDirection = firstCornerDirection.clone().multiply(codeBlockLineLength).add(forwardUpDirection);
             Location secondCorner = clickedBlock.getLocation().clone().add(secondCornerDirection);
 
-            this.pushCodeBlockLine(firstCorner, secondCorner, rightOfPlayerFacing, offset);
+            int distance = this.getDistance(eventItem);
+            this.pushCodeBlockLine(firstCorner, secondCorner, rightOfPlayerFacing, distance);
             player.playSound(player.getLocation(), Sound.BLOCK_PISTON_EXTEND, 1, 1);
         } catch (ObstacleException | OutsideOfWorldBorderException e) {
             Component exceptionMessage = MinecraftVisualProgramming.MINI_MESSAGE.deserialize("<red>" + e.getMessage());
@@ -97,7 +98,32 @@ public class CodeBlockSyntax implements Listener {
 
     }
 
-    private int getOffset(ItemStack eventItem) {
+    private int getCodeBlockLineLength(Location from, Vector direction) {
+        Block currentBlock = from.getBlock();
+        Set<NamespacedKey> namespacedKeys = Set.of(
+            PlayerEventCodeBlock.KEY,
+            PlayerActionCodeBlock.KEY,
+            DefineVariableCodeBlock.KEY,
+            IFConditionCodeBlock.KEY,
+            ELSECodeBlock.KEY,
+            LoopCodeBlock.KEY,
+            CodeBlockBuilder.SEPARATOR_BLOCK_KEY
+        );
+
+        int codeBlockLineLength = 0;
+
+        while (
+            currentBlock.getState() instanceof Sign signBlockState &&
+            namespacedKeys.stream().anyMatch(namespacedKey -> signBlockState.getPersistentDataContainer().has(namespacedKey))
+        ) {
+            codeBlockLineLength++;
+            currentBlock = from.add(direction).getBlock();
+        }
+
+        return codeBlockLineLength;
+    }
+
+    private int getDistance(ItemStack eventItem) {
         Set<ItemStack> codeBlocksWithBracketBlocks = Set.of(
             new IFConditionCodeBlock(),
             new ELSECodeBlock(),

@@ -15,7 +15,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import java.util.List;
 
 public class IFConditionCodeBlock extends ItemStack implements CodeBlock {
-    private static final NamespacedKey KEY = new NamespacedKey(MinecraftVisualProgramming.getInstance(), "IFConditionCodeBlock");
+    public static final NamespacedKey KEY = new NamespacedKey(MinecraftVisualProgramming.getInstance(), "IFConditionCodeBlock");
 
     public IFConditionCodeBlock() {
         super(Material.END_STONE_BRICKS);

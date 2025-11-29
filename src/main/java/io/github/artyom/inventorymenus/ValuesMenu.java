@@ -8,6 +8,7 @@ import io.github.artyom.items.values.VariableItem;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -36,7 +37,7 @@ public class ValuesMenu implements InventoryMenu {
         valuesMenu.setItem(secondRowCenterIndex, new CloseButton());
 
         player.openInventory(valuesMenu);
-        player.playSound(player.getLocation(), "block.note_block.harp", 1, 1);
+        player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_HARP, 1, 1);
 
         PersistentDataContainer persistentDataContainer = player.getPersistentDataContainer();
         persistentDataContainer.set(KEY, PersistentDataType.BOOLEAN, true);

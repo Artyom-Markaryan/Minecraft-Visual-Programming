@@ -15,7 +15,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import java.util.List;
 
 public class ELSECodeBlock extends ItemStack implements CodeBlock {
-    private static final NamespacedKey KEY = new NamespacedKey(MinecraftVisualProgramming.getInstance(), "ELSECodeBlock");
+    public static final NamespacedKey KEY = new NamespacedKey(MinecraftVisualProgramming.getInstance(), "ELSECodeBlock");
 
     public ELSECodeBlock() {
         super(Material.DEEPSLATE_BRICKS);

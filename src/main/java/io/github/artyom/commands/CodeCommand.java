@@ -4,6 +4,7 @@ import io.github.artyom.MinecraftVisualProgramming;
 import io.github.artyom.items.CodeBlocksItem;
 import io.github.artyom.items.ValuesItem;
 import net.kyori.adventure.text.Component;
+import org.bukkit.Sound;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -28,7 +29,7 @@ public class CodeCommand implements CommandExecutor {
         player.getInventory().clear();
         player.getInventory().setItem(7, new CodeBlocksItem());
         player.getInventory().setItem(8, new ValuesItem());
-        player.playSound(player.getLocation(), "entity.item.pickup", 1, 1);
+        player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_HARP, 1, 1);
         return true;
     }
 }

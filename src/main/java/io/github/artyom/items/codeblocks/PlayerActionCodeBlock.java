@@ -15,7 +15,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import java.util.List;
 
 public class PlayerActionCodeBlock extends ItemStack implements CodeBlock {
-    private static final NamespacedKey KEY = new NamespacedKey(MinecraftVisualProgramming.getInstance(), "PlayerActionCodeBlock");
+    public static final NamespacedKey KEY = new NamespacedKey(MinecraftVisualProgramming.getInstance(), "PlayerActionCodeBlock");
 
     public PlayerActionCodeBlock() {
         super(Material.DIAMOND_ORE);

@@ -15,7 +15,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import java.util.List;
 
 public class LoopCodeBlock extends ItemStack implements CodeBlock {
-    private static final NamespacedKey KEY = new NamespacedKey(MinecraftVisualProgramming.getInstance(), "LoopCodeBlock");
+    public static final NamespacedKey KEY = new NamespacedKey(MinecraftVisualProgramming.getInstance(), "LoopCodeBlock");
 
     public LoopCodeBlock() {
         super(Material.PRISMARINE);

@@ -5,6 +5,7 @@ import io.github.artyom.inventorymenus.ValuesMenu;
 import io.github.artyom.inventorymenus.buttons.CloseButton;
 import io.github.artyom.items.CodeBlocksItem;
 import io.github.artyom.items.ValuesItem;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -54,12 +55,12 @@ public class InventoryMenuLogic implements Listener {
 
             if (eventItem.equals(new CloseButton())) {
                 clickedInventory.close();
-                player.playSound(player.getLocation(), "block.note_block.harp", 1, 1);
+                player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_HARP, 1, 1);
                 return;
             }
 
             player.getInventory().addItem(eventItem);
-            player.playSound(player.getLocation(), "entity.item.pickup", 1, 1);
+            player.playSound(player.getLocation(), Sound.ENTITY_ITEM_PICKUP, 1, 1);
         }
     }
 
