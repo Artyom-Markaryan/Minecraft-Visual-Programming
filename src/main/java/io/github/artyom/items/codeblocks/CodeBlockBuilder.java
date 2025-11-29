@@ -2,10 +2,9 @@ package io.github.artyom.items.codeblocks;
 
 import io.github.artyom.MinecraftVisualProgramming;
 import io.github.artyom.exceptions.NotEnoughSpaceException;
+import io.github.artyom.exceptions.TooCloseToWorldBorderException;
 import net.kyori.adventure.text.Component;
-import org.bukkit.DyeColor;
-import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
+import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Chest;
@@ -14,45 +13,47 @@ import org.bukkit.block.data.Directional;
 import org.bukkit.block.sign.Side;
 import org.bukkit.entity.Player;
 import org.bukkit.persistence.PersistentDataType;
+import org.bukkit.util.Vector;
 
 import java.util.List;
 
 public final class CodeBlockBuilder {
     public static final NamespacedKey SEPARATOR_BLOCK_KEY = new NamespacedKey(MinecraftVisualProgramming.getInstance(), "SeparatorBlock");
 
-    public static void placeSeparatorBlock(Block codeBlock, Player player) {
-        Block separatorBlock = codeBlock.getRelative(rightOf(player.getFacing()), 1);
+    public static void placeSeparatorBlock(Location location, Player player) {
+        Block separatorBlock = location.getBlock();
         separatorBlock.setType(Material.OBSERVER);
 
         Directional separatorBlockData = (Directional) separatorBlock.getBlockData();
         separatorBlockData.setFacing(leftOf(player.getFacing()));
         separatorBlock.setBlockData(separatorBlockData);
 
-        placeSignBlock(separatorBlock, player, "[⧈] →", SEPARATOR_BLOCK_KEY);
+        placeSignBlock(location, player, "[⧈] →", SEPARATOR_BLOCK_KEY);
     }
 
-    public static void placeBracketBlocks(Block codeBlock, Player player, Material bracketBlock) {
-        Block openingBracketBlock = codeBlock.getRelative(rightOf(player.getFacing()), 1);
+    public static void placeBracketBlocks(List<Location> locations, Player player, Material bracketBlock) {
+        Block openingBracketBlock = locations.getFirst().getBlock();
         openingBracketBlock.setType(bracketBlock);
 
         Directional openingBracketBlockData = (Directional) openingBracketBlock.getBlockData();
         openingBracketBlockData.setFacing(rightOf(player.getFacing()));
         openingBracketBlock.setBlockData(openingBracketBlockData);
 
-        placeSignBlock(openingBracketBlock, player, "[⧈] {", SEPARATOR_BLOCK_KEY);
+        placeSignBlock(locations.getFirst(), player, "[⧈] {", SEPARATOR_BLOCK_KEY);
 
-        Block closingBracketBlock = codeBlock.getRelative(rightOf(player.getFacing()), 2);
+        Block closingBracketBlock = locations.get(1).getBlock();
         closingBracketBlock.setType(bracketBlock);
 
         Directional closingBracketBlockData = (Directional) closingBracketBlock.getBlockData();
         closingBracketBlockData.setFacing(leftOf(player.getFacing()));
         closingBracketBlock.setBlockData(closingBracketBlockData);
 
-        placeSignBlock(closingBracketBlock, player, "[⧈] }", SEPARATOR_BLOCK_KEY);
+        placeSignBlock(locations.get(1), player, "[⧈] }", SEPARATOR_BLOCK_KEY);
     }
 
-    public static void placeSignBlock(Block codeBlock, Player player, String signTitle, NamespacedKey key) {
-        Block signBlock = codeBlock.getRelative(player.getFacing().getOppositeFace(), 1);
+    public static void placeSignBlock(Location location, Player player, String signTitle, NamespacedKey key) {
+        Vector signBlockDirection = new Vector(player.getFacing().getOppositeFace().getModX(), 0, player.getFacing().getOppositeFace().getModZ());
+        Block signBlock = location.clone().add(signBlockDirection).getBlock();
         signBlock.setType(Material.OAK_WALL_SIGN);
 
         Directional signBlockData = (Directional) signBlock.getBlockData();
@@ -68,8 +69,8 @@ public final class CodeBlockBuilder {
         signBlockState.update();
     }
 
-    public static void placeChestBlock(Block codeBlock, Player player) {
-        Block chestBlock = codeBlock.getRelative(BlockFace.UP, 1);
+    public static void placeChestBlock(Location location, Player player) {
+        Block chestBlock = location.getBlock();
         chestBlock.setType(Material.CHEST);
 
         Directional chestBlockData = (Directional) chestBlock.getBlockData();
@@ -111,10 +112,11 @@ public final class CodeBlockBuilder {
         };
     }
 
-    public static void checkSurroundingBlocks(List<Block> surroundingBlocks) throws NotEnoughSpaceException {
-        for (Block block : surroundingBlocks) {
-            if (block.getType() != Material.AIR)
-                throw new NotEnoughSpaceException();
-        }
+    public static void checkSurroundingLocations(World world, List<Location> surroundingLocations) throws NotEnoughSpaceException, TooCloseToWorldBorderException {
+        if (surroundingLocations.stream().anyMatch(location -> location.getBlock().getType() != Material.AIR))
+            throw new NotEnoughSpaceException();
+
+        if (surroundingLocations.stream().anyMatch(location -> !world.getWorldBorder().isInside(location)))
+            throw new TooCloseToWorldBorderException();
     }
 }

@@ -2,15 +2,19 @@ package io.github.artyom.items.codeblocks;
 
 import io.github.artyom.MinecraftVisualProgramming;
 import io.github.artyom.exceptions.NotEnoughSpaceException;
+import io.github.artyom.exceptions.TooCloseToWorldBorderException;
 import io.github.artyom.items.ServerItem;
 import net.kyori.adventure.text.Component;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
+import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.util.Vector;
 
 import java.util.List;
 
@@ -36,19 +40,28 @@ public class LoopCodeBlock extends ItemStack implements CodeBlock {
     }
 
     @Override
-    public void onBlockPlace(Block block, Player player) throws NotEnoughSpaceException {
-        List<Block> surroundingBlocks = List.of(
-            block.getRelative(CodeBlockBuilder.rightOf(player.getFacing()), 1),
-            block.getRelative(CodeBlockBuilder.rightOf(player.getFacing()), 2),
-            block.getRelative(player.getFacing().getOppositeFace(), 1),
-            block.getRelative(CodeBlockBuilder.rightOf(player.getFacing()), 1).getRelative(player.getFacing().getOppositeFace(), 1),
-            block.getRelative(CodeBlockBuilder.rightOf(player.getFacing()), 2).getRelative(player.getFacing().getOppositeFace(), 1),
-            block.getRelative(BlockFace.UP, 1)
-        );
-        CodeBlockBuilder.checkSurroundingBlocks(surroundingBlocks);
+    public void onBlockPlace(Block block, Player player) throws NotEnoughSpaceException, TooCloseToWorldBorderException {
+        World world = player.getWorld();
 
-        CodeBlockBuilder.placeBracketBlocks(block, player, Material.STICKY_PISTON);
-        CodeBlockBuilder.placeSignBlock(block, player, "[⧈] ∑", KEY);
-        CodeBlockBuilder.placeChestBlock(block, player);
+        Location codeBlockLocation = block.getLocation();
+
+        Vector bracketBlockDirection = new Vector(CodeBlockBuilder.rightOf(player.getFacing()).getModX(), 0, CodeBlockBuilder.rightOf(player.getFacing()).getModZ());
+        Vector codeBlockSignDirection = new Vector(player.getFacing().getOppositeFace().getModX(), 0, player.getFacing().getOppositeFace().getModZ());
+        Vector bracketBlockSignDirection = new Vector(bracketBlockDirection.getX() + codeBlockSignDirection.getX(), 0, bracketBlockDirection.getZ() + codeBlockSignDirection.getZ());
+        Vector chestBlockDirection = new Vector(0, BlockFace.UP.getModY(), 0);
+
+        List<Location> surroundingLocations = List.of(
+            codeBlockLocation.clone().add(bracketBlockDirection),
+            codeBlockLocation.clone().add(bracketBlockDirection.clone().multiply(2)),
+            codeBlockLocation.clone().add(codeBlockSignDirection),
+            codeBlockLocation.clone().add(bracketBlockSignDirection),
+            codeBlockLocation.clone().add(bracketBlockSignDirection.clone().add(bracketBlockDirection)),
+            codeBlockLocation.clone().add(chestBlockDirection)
+        );
+        CodeBlockBuilder.checkSurroundingLocations(world, surroundingLocations);
+
+        CodeBlockBuilder.placeBracketBlocks(List.of(surroundingLocations.getFirst(), surroundingLocations.get(1)), player, Material.STICKY_PISTON);
+        CodeBlockBuilder.placeSignBlock(codeBlockLocation, player, "[⧈] ∑", KEY);
+        CodeBlockBuilder.placeChestBlock(surroundingLocations.getLast(), player);
     }
 }

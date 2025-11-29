@@ -4,10 +4,12 @@ import io.github.artyom.MinecraftVisualProgramming;
 import io.github.artyom.exceptions.NotEnoughSpaceException;
 import io.github.artyom.exceptions.ObstacleException;
 import io.github.artyom.exceptions.OutsideOfWorldBorderException;
+import io.github.artyom.exceptions.TooCloseToWorldBorderException;
 import io.github.artyom.items.codeblocks.*;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.World;
 import org.bukkit.block.*;
 import org.bukkit.block.sign.Side;
@@ -50,7 +52,7 @@ public class CodeBlockSyntax implements Listener {
                 try {
                     CodeBlock placedCodeBlock = (CodeBlock) codeBlock;
                     placedCodeBlock.onBlockPlace(block, player);
-                } catch (NotEnoughSpaceException e) {
+                } catch (NotEnoughSpaceException | TooCloseToWorldBorderException e) {
                     blockPlaceEvent.setCancelled(true);
                     Component exceptionMessage = MinecraftVisualProgramming.MINI_MESSAGE.deserialize("<red>" + e.getMessage());
                     player.sendActionBar(exceptionMessage);
@@ -78,8 +80,8 @@ public class CodeBlockSyntax implements Listener {
             BlockFace rightOfPlayerFacing = CodeBlockBuilder.rightOf(player.getFacing());
             BlockFace diagonalRightOfPlayerFacing = CodeBlockBuilder.diagonalRightOf(player.getFacing());
 
-            int offset = getOffset(playerInteractEvent.getItem());
-            int[] diagonalOffset = getDiagonalOffset(diagonalRightOfPlayerFacing, offset);
+            int offset = this.getOffset(playerInteractEvent.getItem());
+            int[] diagonalOffset = this.getDiagonalOffset(diagonalRightOfPlayerFacing, offset);
 
             Location firstCorner = clickedBlock.getLocation().clone().add(
                 rightOfPlayerFacing.getModX(), 0, rightOfPlayerFacing.getModZ()
@@ -88,7 +90,8 @@ public class CodeBlockSyntax implements Listener {
                 diagonalRightOfPlayerFacing.getModX() * diagonalOffset[0], 1, diagonalRightOfPlayerFacing.getModZ() * diagonalOffset[1]
             );
 
-            pushCodeBlockLine(firstCorner, secondCorner, rightOfPlayerFacing, offset);
+            this.pushCodeBlockLine(firstCorner, secondCorner, rightOfPlayerFacing, offset);
+            player.playSound(player.getLocation(), Sound.BLOCK_PISTON_EXTEND, 1, 1);
         } catch (ObstacleException | OutsideOfWorldBorderException e) {
             Component exceptionMessage = MinecraftVisualProgramming.MINI_MESSAGE.deserialize("<red>" + e.getMessage());
             player.sendActionBar(exceptionMessage);
@@ -114,8 +117,7 @@ public class CodeBlockSyntax implements Listener {
         };
     }
 
-    private void pushCodeBlockLine(Location firstCorner, Location secondCorner, BlockFace direction, int offset)
-        throws ObstacleException, OutsideOfWorldBorderException {
+    private void pushCodeBlockLine(Location firstCorner, Location secondCorner, BlockFace direction, int offset) throws ObstacleException, OutsideOfWorldBorderException {
         World world = firstCorner.getWorld();
 
         int minX = Math.min(firstCorner.getBlockX(), secondCorner.getBlockX());
@@ -146,8 +148,8 @@ public class CodeBlockSyntax implements Listener {
 
                     boolean isPartOfRegion =
                         targetBlock.getX() >= minX && targetBlock.getX() <= maxX &&
-                            targetBlock.getY() >= minY && targetBlock.getY() <= maxY &&
-                            targetBlock.getZ() >= minZ && targetBlock.getZ() <= maxZ;
+                        targetBlock.getY() >= minY && targetBlock.getY() <= maxY &&
+                        targetBlock.getZ() >= minZ && targetBlock.getZ() <= maxZ;
                     if (!isPartOfRegion)
                         throw new ObstacleException();
                 }
