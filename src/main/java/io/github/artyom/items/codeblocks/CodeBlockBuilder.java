@@ -138,11 +138,7 @@ public final class CodeBlockBuilder {
 
     private void placeSeparatorBlock(Location location, Player player) {
         Block separatorBlock = location.getBlock();
-        separatorBlock.setType(Material.OBSERVER);
-
-        Directional separatorBlockData = (Directional) separatorBlock.getBlockData();
-        separatorBlockData.setFacing(leftOf(player.getFacing()));
-        separatorBlock.setBlockData(separatorBlockData);
+        separatorBlock.setType(Material.MOSSY_COBBLESTONE);
 
         placeSignBlock(location.add(this.signBlockDirection), player, "[⧈] →", SEPARATOR_BLOCK_KEY);
     }

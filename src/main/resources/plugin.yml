@@ -4,4 +4,4 @@ main: io.github.artyom.MinecraftVisualProgramming
 api-version: '1.21'
 commands:
   code:
-    aliases: [dev]
+    aliases: [code]

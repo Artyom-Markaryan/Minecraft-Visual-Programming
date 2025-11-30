@@ -5,11 +5,14 @@ import io.github.artyom.listeners.CodeBlockSyntax;
 import io.github.artyom.listeners.InventoryMenuLogic;
 import io.github.artyom.listeners.PlayerEvents;
 import net.kyori.adventure.text.minimessage.MiniMessage;
+import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 public final class MinecraftVisualProgramming extends JavaPlugin {
     private static final String PLUGIN_NAME = "Minecraft-Visual-Programming";
@@ -30,9 +33,15 @@ public final class MinecraftVisualProgramming extends JavaPlugin {
         for (Listener listener : listeners)
             this.getServer().getPluginManager().registerEvents(listener, this);
 
-        PluginCommand codeCommand = this.getCommand("code");
-        if (codeCommand != null)
-            codeCommand.setExecutor(new CodeCommand());
+        try {
+            Map<PluginCommand, CommandExecutor> commands = Map.of(
+                Objects.requireNonNull(this.getCommand("code")), new CodeCommand()
+            );
+            for (Map.Entry<PluginCommand, CommandExecutor> command : commands.entrySet())
+                command.getKey().setExecutor(command.getValue());
+        } catch (NullPointerException e) {
+            this.getLogger().severe("Failed to register commands! A command was not found in the plugin.yml file!");
+        }
     }
 
     /**
