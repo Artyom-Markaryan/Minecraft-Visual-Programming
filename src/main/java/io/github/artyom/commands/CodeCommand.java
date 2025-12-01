@@ -64,6 +64,7 @@ public class CodeCommand implements CommandExecutor, TabCompleter {
                     "<#0BDA51>L'emplacement de ton code a été correctement défini!"
                 );
                 player.sendMessage(successMessage);
+                player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1, 0);
             } catch (NumberFormatException e) {
                 Component exceptionMessage = MinecraftVisualProgramming.MINI_MESSAGE.deserialize(
                     "<red>Les coordonnées de l'emplacement de ton code doivent être des nombres!"
@@ -114,8 +115,6 @@ public class CodeCommand implements CommandExecutor, TabCompleter {
     private void setCodeLocation(CodeLocation codeLocation, Player player) throws IncorrectCodeLocationSizeException {
         this.checkCodeLocationSize(codeLocation.getSize());
         player.getPersistentDataContainer().set(CODE_LOCATION_KEY, PersistentDataType.STRING, codeLocation.toString());
-        String serializedCodeLocation = codeLocation.toString();
-        player.sendMessage(Component.text("Ton emplacement de code est: " + serializedCodeLocation));
     }
 
     private void checkCodeLocationSize(int[] codeLocationSize) throws IncorrectCodeLocationSizeException {

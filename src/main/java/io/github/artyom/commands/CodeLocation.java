@@ -12,7 +12,8 @@ public record CodeLocation(Location firstCorner, Location secondCorner) {
     @Override
     public @NotNull String toString() {
         try {
-            return OBJECT_MAPPER.writeValueAsString(this);
+            CodeLocationDTO codeLocationDTO = CodeLocationDTO.fromCodeLocation(this);
+            return OBJECT_MAPPER.writeValueAsString(codeLocationDTO);
         } catch (JsonProcessingException e) {
             MinecraftVisualProgramming.getInstance().getLogger().severe(
                 e.getClass().getName() + " -> " + e.getMessage()
@@ -23,7 +24,8 @@ public record CodeLocation(Location firstCorner, Location secondCorner) {
 
     public static CodeLocation deserialize(String serializedCodeLocation) {
         try {
-            return OBJECT_MAPPER.readValue(serializedCodeLocation, CodeLocation.class);
+            CodeLocationDTO codeLocationDTO = OBJECT_MAPPER.readValue(serializedCodeLocation, CodeLocationDTO.class);
+            return codeLocationDTO.toCodeLocation();
         } catch (JsonProcessingException e) {
             MinecraftVisualProgramming.getInstance().getLogger().severe(
                 e.getClass().getName() + " -> " + e.getMessage()
@@ -55,5 +57,44 @@ public record CodeLocation(Location firstCorner, Location secondCorner) {
         }
 
         return new int[]{codeLocationWidth, codeLocationHeight, codeLocationDepth};
+    }
+
+    private record CodeLocationDTO(LocationDTO firstCorner, LocationDTO secondCorner) {
+        public static CodeLocationDTO fromCodeLocation(CodeLocation codeLocation) {
+            return new CodeLocationDTO(
+                LocationDTO.fromLocation(codeLocation.firstCorner()),
+                LocationDTO.fromLocation(codeLocation.secondCorner())
+            );
+        }
+        public CodeLocation toCodeLocation() {
+            return new CodeLocation(
+                this.firstCorner.toLocation(),
+                this.secondCorner.toLocation()
+            );
+        }
+    }
+
+    private record LocationDTO(String worldName, double x, double y, double z, float yaw, float pitch) {
+        public static LocationDTO fromLocation(Location location) {
+            return new LocationDTO(
+                location.getWorld().getName(),
+                location.getX(),
+                location.getY(),
+                location.getZ(),
+                location.getYaw(),
+                location.getPitch()
+            );
+        }
+
+        public Location toLocation() {
+            return new Location(
+                MinecraftVisualProgramming.getInstance().getServer().getWorld(this.worldName),
+                this.x,
+                this.y,
+                this.z,
+                this.yaw,
+                this.pitch
+            );
+        }
     }
 }
