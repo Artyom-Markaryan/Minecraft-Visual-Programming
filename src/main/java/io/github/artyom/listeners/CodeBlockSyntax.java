@@ -158,7 +158,9 @@ public class CodeBlockSyntax implements Listener {
 
                     Location targetLocation = originalLocation.clone().add(offsetX, offsetY, offsetZ);
                     if (!world.getWorldBorder().isInside(targetLocation))
-                        throw new OutsideOfWorldBorderException();
+                        throw new OutsideOfWorldBorderException(
+                            "Impossible de pousser cette ligne de blocs de code à l'extérieur de la bordure du monde!"
+                        );
                     Block targetBlock = world.getBlockAt(targetLocation);
                     if (targetBlock.getType() == Material.AIR)
                         continue;
