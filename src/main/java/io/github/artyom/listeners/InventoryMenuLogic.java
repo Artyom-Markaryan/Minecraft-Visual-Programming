@@ -1,11 +1,13 @@
 package io.github.artyom.listeners;
 
-import io.github.artyom.inventorymenus.CodeBlocksMenu;
-import io.github.artyom.inventorymenus.ValuesMenu;
+import io.github.artyom.inventorymenus.*;
 import io.github.artyom.inventorymenus.buttons.CloseButton;
 import io.github.artyom.items.CodeBlocksItem;
 import io.github.artyom.items.ValuesItem;
+import io.github.artyom.items.codeblocks.*;
 import org.bukkit.Sound;
+import org.bukkit.block.Block;
+import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -15,7 +17,6 @@ import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.persistence.PersistentDataContainer;
 
 public class InventoryMenuLogic implements Listener {
     @EventHandler
@@ -31,18 +32,55 @@ public class InventoryMenuLogic implements Listener {
         if (eventItem.equals(codeBlocksItem)) {
             CodeBlocksMenu codeBlocksMenu = new CodeBlocksMenu();
             codeBlocksMenu.open(player);
+            return;
         }
         if (eventItem.equals(valuesItem)) {
             ValuesMenu valuesMenu = new ValuesMenu();
             valuesMenu.open(player);
+            return;
+        }
+
+        Block clickedBlock = playerInteractEvent.getClickedBlock();
+        if (clickedBlock == null)
+            return;
+
+        if (!(clickedBlock.getState() instanceof Sign signBlockState))
+            return;
+
+        if (signBlockState.getPersistentDataContainer().has(PlayerEventCodeBlock.KEY)) {
+            PlayerEventsMenu playerEventsMenu = new PlayerEventsMenu();
+            playerEventsMenu.open(player);
+            return;
+        }
+
+        if (signBlockState.getPersistentDataContainer().has(PlayerActionCodeBlock.KEY)) {
+            PlayerActionsMenu playerActionsMenu = new PlayerActionsMenu();
+            playerActionsMenu.open(player);
+            return;
+        }
+
+        if (signBlockState.getPersistentDataContainer().has(DefineVariableCodeBlock.KEY)) {
+            DefineVariableMenu defineVariableMenu = new DefineVariableMenu();
+            defineVariableMenu.open(player);
+            return;
+        }
+
+        if (signBlockState.getPersistentDataContainer().has(IFConditionCodeBlock.KEY)) {
+            IFConditionMenu ifConditionMenu = new IFConditionMenu();
+            ifConditionMenu.open(player);
+            return;
+        }
+
+        if (signBlockState.getPersistentDataContainer().has(LoopCodeBlock.KEY)) {
+            LoopsMenu loopsMenu = new LoopsMenu();
+            loopsMenu.open(player);
         }
     }
 
     @EventHandler
     public void onInventoryClick(InventoryClickEvent inventoryClickEvent) {
         Player player = (Player) inventoryClickEvent.getWhoClicked();
-        PersistentDataContainer persistentDataContainer = player.getPersistentDataContainer();
-        if (persistentDataContainer.has(CodeBlocksMenu.KEY) || persistentDataContainer.has(ValuesMenu.KEY)) {
+        if (player.getPersistentDataContainer().has(InventoryMenu.KEY)) {
             inventoryClickEvent.setCancelled(true);
 
             Inventory clickedInventory = inventoryClickEvent.getClickedInventory();
@@ -67,10 +105,7 @@ public class InventoryMenuLogic implements Listener {
     @EventHandler
     public void onInventoryClose(InventoryCloseEvent inventoryCloseEvent) {
         Player player = (Player) inventoryCloseEvent.getPlayer();
-        PersistentDataContainer persistentDataContainer = player.getPersistentDataContainer();
-        if (persistentDataContainer.has(CodeBlocksMenu.KEY))
-            persistentDataContainer.remove(CodeBlocksMenu.KEY);
-        if (persistentDataContainer.has(ValuesMenu.KEY))
-            persistentDataContainer.remove(ValuesMenu.KEY);
+        if (player.getPersistentDataContainer().has(InventoryMenu.KEY))
+            player.getPersistentDataContainer().remove(InventoryMenu.KEY);
     }
 }

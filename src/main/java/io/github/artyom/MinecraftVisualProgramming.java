@@ -3,7 +3,7 @@ package io.github.artyom;
 import io.github.artyom.commands.CodeCommand;
 import io.github.artyom.listeners.CodeBlockSyntax;
 import io.github.artyom.listeners.InventoryMenuLogic;
-import io.github.artyom.listeners.PlayerEvents;
+import io.github.artyom.listeners.SimplePlayerEvents;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.PluginCommand;
@@ -26,7 +26,7 @@ public final class MinecraftVisualProgramming extends JavaPlugin {
         this.getLogger().info(PLUGIN_NAME + " is enabled!");
 
         List<Listener> listeners = List.of(
-            new PlayerEvents(),
+            new SimplePlayerEvents(),
             new InventoryMenuLogic(),
             new CodeBlockSyntax()
         );
