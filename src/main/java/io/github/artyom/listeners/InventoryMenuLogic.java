@@ -128,16 +128,21 @@ public class InventoryMenuLogic implements Listener {
                     .findFirst()
                     .ifPresent(
                         codeBlockFunction -> {
-                            Block targetBlock = player.getTargetBlock(null, 4);
-                            if (targetBlock.getState() instanceof Sign signBlockState) {
-                                PersistentDataContainer codeBlockFunctionPDC = codeBlockFunction.get().getItemMeta().getPersistentDataContainer();
-                                PersistentDataContainer signBlockStatePDC = signBlockState.getPersistentDataContainer();
-                                codeBlockFunctionPDC.copyTo(signBlockStatePDC, true);
-                                String codeBlockFunctionKeyValue = Objects.requireNonNull(signBlockStatePDC.get(CodeBlockFunction.KEY, PersistentDataType.STRING));
-                                signBlockState.getSide(Side.FRONT).line(1, Component.text(codeBlockFunctionKeyValue));
-                                signBlockState.update();
-                                player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1, 1);
-                                player.closeInventory();
+                            if (player.getTargetBlock(null, 4).getState() instanceof Sign signBlockState) {
+                                try {
+                                    PersistentDataContainer codeBlockFunctionPDC = codeBlockFunction.get().getItemMeta().getPersistentDataContainer();
+                                    PersistentDataContainer signBlockStatePDC = signBlockState.getPersistentDataContainer();
+                                    codeBlockFunctionPDC.copyTo(signBlockStatePDC, true);
+                                    String codeBlockFunctionKeyValue = Objects.requireNonNull(signBlockStatePDC.get(CodeBlockFunction.KEY, PersistentDataType.STRING));
+                                    signBlockState.getSide(Side.FRONT).line(1, Component.text(codeBlockFunctionKeyValue));
+                                    signBlockState.update();
+                                    player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1, 1);
+                                    player.closeInventory();
+                                } catch (NullPointerException e) {
+                                    MinecraftVisualProgramming.getInstance().getLogger().severe(
+                                        e.getClass().getName() + " -> Objects.requireNonNull(signBlockStatePDC.get(CodeBlockFunction.KEY, PersistentDataType.STRING)) returned null!"
+                                    );
+                                }
                             }
                         }
                     );

@@ -19,7 +19,8 @@ public class AddNumbersButton extends ItemStack {
         itemMeta.customName(customName);
         itemMeta.lore(
             List.of(
-                ServerItem.getNonItalicComponent("<dark_gray>» <blue>Additionne <gray>plusieurs <red>nombres <gray>ensemble et retourne la <green>somme"),
+                ServerItem.getNonItalicComponent("<dark_gray>» <blue>Additionne <gray>plusieurs <red>nombres <gray>ensemble"),
+                ServerItem.getNonItalicComponent("<dark_gray>» <gray>et retourne la <green>somme"),
                 ServerItem.getNonItalicComponent(""),
                 ServerItem.getNonItalicComponent("<dark_gray>» <gray>Dans le <gold>coffre de paramètres<gray>:"),
                 ServerItem.getNonItalicComponent("<dark_gray>» <red>⅔ Nombres <gray>- Les nombres à additionner")
