@@ -1,10 +1,12 @@
 package io.github.artyom.inventorymenus.buttons.playerevents;
 
+import io.github.artyom.inventorymenus.buttons.CodeBlockFunction;
 import io.github.artyom.items.ServerItem;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.persistence.PersistentDataType;
 
 import java.util.List;
 
@@ -23,6 +25,7 @@ public class CodeCompileButton extends ItemStack {
         );
         itemMeta.setEnchantmentGlintOverride(true);
         itemMeta.setMaxStackSize(1);
+        itemMeta.getPersistentDataContainer().set(CodeBlockFunction.KEY, PersistentDataType.STRING, "/code compile");
         this.setItemMeta(itemMeta);
     }
 }

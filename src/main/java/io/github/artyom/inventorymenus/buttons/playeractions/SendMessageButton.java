@@ -1,10 +1,12 @@
 package io.github.artyom.inventorymenus.buttons.playeractions;
 
+import io.github.artyom.inventorymenus.buttons.CodeBlockFunction;
 import io.github.artyom.items.ServerItem;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.persistence.PersistentDataType;
 
 import java.util.List;
 
@@ -25,6 +27,7 @@ public class SendMessageButton extends ItemStack {
         );
         itemMeta.setEnchantmentGlintOverride(true);
         itemMeta.setMaxStackSize(1);
+        itemMeta.getPersistentDataContainer().set(CodeBlockFunction.KEY, PersistentDataType.STRING, "▶ Chat");
         this.setItemMeta(itemMeta);
     }
 }
