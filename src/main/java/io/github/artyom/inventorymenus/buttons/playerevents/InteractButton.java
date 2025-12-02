@@ -18,8 +18,8 @@ public class InteractButton extends ItemStack {
         itemMeta.customName(customName);
         itemMeta.lore(
             List.of(
-                ServerItem.getNonItalicComponent("<dark_gray>» <blue>Déclenche l'exécution <gray>de la ligne des <aqua>blocs de code"),
-                ServerItem.getNonItalicComponent("<dark_gray>» <gray>quand le <dark_aqua>joueur <green>clique gauche <gray>ou <green>clique droit")
+                ServerItem.getNonItalicComponent("<dark_gray>» <blue>Exécute <gray>la ligne des <aqua>blocs de code <gray>quand"),
+                ServerItem.getNonItalicComponent("<dark_gray>» <gray>le <dark_aqua>joueur <green>clique gauche <gray>ou <green>clique droit")
             )
         );
         itemMeta.setEnchantmentGlintOverride(true);

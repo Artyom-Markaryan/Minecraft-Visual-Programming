@@ -1,6 +1,7 @@
 package io.github.artyom.inventorymenus;
 
 import io.github.artyom.inventorymenus.buttons.CloseButton;
+import io.github.artyom.inventorymenus.buttons.functions.AddNumbersButton;
 import io.github.artyom.inventorymenus.buttons.functions.DefineButton;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
@@ -17,6 +18,7 @@ public class DefineVariableMenu implements InventoryMenu {
         Inventory defineVariableMenu = Bukkit.createInventory(player, size, title);
 
         defineVariableMenu.setItem(0, new DefineButton());
+        defineVariableMenu.setItem(1, new AddNumbersButton());
         int secondRowCenterIndex = 13;
         defineVariableMenu.setItem(secondRowCenterIndex, new CloseButton());
 

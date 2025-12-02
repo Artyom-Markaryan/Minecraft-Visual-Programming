@@ -100,7 +100,7 @@ public final class CodeBlockBuilder {
         placeSignBlock(surroundingLocations.get(1), this.player, this.signTitle, namespacedKey);
 
         if (this.needsBracketBlocks)
-            this.placeBracketBlocks(new BracketBlocksLocations(surroundingLocations.getFirst(), surroundingLocations.get(3)), this.player, this.bracketBlockType);
+            this.placeBracketBlocks(new BracketBlockLocations(surroundingLocations.getFirst(), surroundingLocations.get(3)), this.player, this.bracketBlockType);
         else
             this.placeSeparatorBlock(surroundingLocations.getFirst(), this.player);
 
@@ -143,9 +143,9 @@ public final class CodeBlockBuilder {
         placeSignBlock(location.add(this.signBlockDirection), player, "[⧈] →", SEPARATOR_BLOCK_KEY);
     }
 
-    private void placeBracketBlocks(BracketBlocksLocations bracketBlocksLocations, Player player, Material bracketBlockType) {
+    private void placeBracketBlocks(BracketBlockLocations bracketBlockLocations, Player player, Material bracketBlockType) {
         for (int i = 0; i <= 1; i++) {
-            Location bracketBlockLocation = i == 0 ? bracketBlocksLocations.opening() : bracketBlocksLocations.closing();
+            Location bracketBlockLocation = i == 0 ? bracketBlockLocations.opening() : bracketBlockLocations.closing();
             Block bracketBlock = bracketBlockLocation.getBlock();
             bracketBlock.setType(bracketBlockType);
 

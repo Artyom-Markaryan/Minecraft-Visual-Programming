@@ -17,8 +17,8 @@ public class CodeCompileButton extends ItemStack {
         itemMeta.customName(customName);
         itemMeta.lore(
             List.of(
-                ServerItem.getNonItalicComponent("<dark_gray>» <blue>Déclenche l'exécution <gray>de la ligne des <aqua>blocs de code"),
-                ServerItem.getNonItalicComponent("<dark_gray>» <gray>quand le <dark_aqua>joueur <gray>exécute la commande <#0BDA51>/code compile")
+                ServerItem.getNonItalicComponent("<dark_gray>» <blue>Exécute <gray>la ligne des <aqua>blocs de code <gray>quand"),
+                ServerItem.getNonItalicComponent("<dark_gray>» <gray>le <dark_aqua>joueur <gray>exécute la commande <#0BDA51>/code compile")
             )
         );
         itemMeta.setEnchantmentGlintOverride(true);

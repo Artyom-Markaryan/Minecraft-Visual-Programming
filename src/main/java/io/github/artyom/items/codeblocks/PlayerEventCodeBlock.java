@@ -26,7 +26,7 @@ public class PlayerEventCodeBlock extends ItemStack implements CodeBlock {
         itemMeta.lore(
             List.of(
                 ServerItem.getNonItalicComponent("<dark_gray>» <blue>Exécute <gray>une ligne des <aqua>blocs de code <gray>quand"),
-                ServerItem.getNonItalicComponent("<dark_gray>» <gray>le <dark_aqua>joueur <gray>déclenche l'événement spécifié")
+                ServerItem.getNonItalicComponent("<dark_gray>» <gray>le <dark_aqua>joueur <gray>déclenche <dark_purple>l'événement <gray>spécifié")
             )
         );
         itemMeta.setEnchantmentGlintOverride(true);
