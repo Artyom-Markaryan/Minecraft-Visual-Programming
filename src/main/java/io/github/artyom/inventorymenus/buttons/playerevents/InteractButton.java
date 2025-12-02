@@ -14,12 +14,12 @@ public class InteractButton extends ItemStack {
         super(Material.DIAMOND_PICKAXE);
 
         ItemMeta itemMeta = super.getItemMeta();
-        Component customName = ServerItem.getNonItalicComponent("<green>Intéragit");
+        Component customName = ServerItem.getNonItalicComponent("<green>Intéraction");
         itemMeta.customName(customName);
         itemMeta.lore(
             List.of(
-                ServerItem.getNonItalicComponent("<dark_gray>» <blue>Déclenche l'exécution <gray>de la ligne de code"),
-                ServerItem.getNonItalicComponent("<dark_gray>» <gray>quand le <dark_aqua>joueur <gray>fait un <green>clic gauche <gray>ou un <green>clic droit")
+                ServerItem.getNonItalicComponent("<dark_gray>» <blue>Déclenche l'exécution <gray>de la ligne des <aqua>blocs de code"),
+                ServerItem.getNonItalicComponent("<dark_gray>» <gray>quand le <dark_aqua>joueur <green>clique gauche <gray>ou <green>clique droit")
             )
         );
         itemMeta.setEnchantmentGlintOverride(true);

@@ -13,12 +13,12 @@ public class CodeCompileButton extends ItemStack {
         super(Material.COMMAND_BLOCK);
 
         ItemMeta itemMeta = super.getItemMeta();
-        Component customName = ServerItem.getNonItalicComponent("<aqua>/code compile");
+        Component customName = ServerItem.getNonItalicComponent("<#0BDA51>/code compile");
         itemMeta.customName(customName);
         itemMeta.lore(
             List.of(
-                ServerItem.getNonItalicComponent("<dark_gray>» <blue>Déclenche l'exécution <gray>de la ligne de code quand"),
-                ServerItem.getNonItalicComponent("<dark_gray>» <gray>le <dark_aqua>joueur <gray>exécute la commande <#0BDA51>/code compile")
+                ServerItem.getNonItalicComponent("<dark_gray>» <blue>Déclenche l'exécution <gray>de la ligne des <aqua>blocs de code"),
+                ServerItem.getNonItalicComponent("<dark_gray>» <gray>quand le <dark_aqua>joueur <gray>exécute la commande <#0BDA51>/code compile")
             )
         );
         itemMeta.setEnchantmentGlintOverride(true);

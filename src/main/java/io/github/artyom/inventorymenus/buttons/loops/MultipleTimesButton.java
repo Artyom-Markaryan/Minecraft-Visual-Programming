@@ -17,7 +17,7 @@ public class MultipleTimesButton extends ItemStack {
         itemMeta.customName(customName);
         itemMeta.lore(
             List.of(
-                ServerItem.getNonItalicComponent("<dark_gray>» <blue>Répète l'exécution <gray>des blocs de code à l'intérieur"),
+                ServerItem.getNonItalicComponent("<dark_gray>» <blue>Répète l'exécution <gray>des <aqua>blocs de code <gray>à l'intérieur"),
                 ServerItem.getNonItalicComponent("<dark_gray>» <gray>des <gold>blocs accolades <gray>un nombre de fois"),
                 ServerItem.getNonItalicComponent(""),
                 ServerItem.getNonItalicComponent("<dark_gray>» <gray>Dans le <gold>coffre de paramètres<gray>:"),

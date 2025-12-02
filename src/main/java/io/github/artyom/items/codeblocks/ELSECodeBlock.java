@@ -21,7 +21,7 @@ public class ELSECodeBlock extends ItemStack implements CodeBlock {
         super(Material.DEEPSLATE_BRICKS);
 
         ItemMeta itemMeta = super.getItemMeta();
-        Component customName = ServerItem.getNonItalicComponent("<red>≠ SINON");
+        Component customName = ServerItem.getNonItalicComponent("<red>≠ ELSE");
         itemMeta.customName(customName);
         itemMeta.lore(
             List.of(

@@ -27,7 +27,7 @@ public class LoopCodeBlock extends ItemStack implements CodeBlock {
             List.of(
                 ServerItem.getNonItalicComponent("<dark_gray>» <blue>Répète l'exécution <gray>des <aqua>blocs de code"),
                 ServerItem.getNonItalicComponent("<dark_gray>» <gray>à l'intérieur des <gold>blocs accolades"),
-                ServerItem.getNonItalicComponent("<dark_gray>» <gray>selon la <blue>façon <gray>spécifiée")
+                ServerItem.getNonItalicComponent("<dark_gray>» <gray>selon la <blue>manière <gray>spécifiée")
             )
         );
         itemMeta.setEnchantmentGlintOverride(true);

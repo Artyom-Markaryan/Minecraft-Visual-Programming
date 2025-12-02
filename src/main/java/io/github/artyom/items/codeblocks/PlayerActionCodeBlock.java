@@ -25,7 +25,7 @@ public class PlayerActionCodeBlock extends ItemStack implements CodeBlock {
         itemMeta.customName(customName);
         itemMeta.lore(
             List.of(
-                ServerItem.getNonItalicComponent("<dark_gray>» <blue>Effectue <gray>une <dark_purple>action <gray>liée au <light_purple>joueur")
+                ServerItem.getNonItalicComponent("<dark_gray>» <blue>Effectue <gray>une action liée au <dark_aqua>joueur")
             )
         );
         itemMeta.setEnchantmentGlintOverride(true);

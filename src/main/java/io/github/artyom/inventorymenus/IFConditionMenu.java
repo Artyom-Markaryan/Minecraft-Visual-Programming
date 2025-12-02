@@ -13,7 +13,7 @@ public class IFConditionMenu implements InventoryMenu {
     @Override
     public void open(Player player) {
         int size = 18;
-        Component title = Component.text("Condition IF");
+        Component title = Component.text("IF Condition");
         Inventory ifConditionMenu = Bukkit.createInventory(player, size, title);
 
         ifConditionMenu.setItem(0, new EqualsButton());

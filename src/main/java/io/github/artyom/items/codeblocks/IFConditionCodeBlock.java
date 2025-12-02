@@ -21,7 +21,7 @@ public class IFConditionCodeBlock extends ItemStack implements CodeBlock {
         super(Material.END_STONE_BRICKS);
 
         ItemMeta itemMeta = super.getItemMeta();
-        Component customName = ServerItem.getNonItalicComponent("<yellow>⇒ SI Condition");
+        Component customName = ServerItem.getNonItalicComponent("<yellow>⇒ IF Condition");
         itemMeta.customName(customName);
         itemMeta.lore(
             List.of(
