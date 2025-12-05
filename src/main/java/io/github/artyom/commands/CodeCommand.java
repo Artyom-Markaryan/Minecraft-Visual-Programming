@@ -1,10 +1,13 @@
 package io.github.artyom.commands;
 
 import io.github.artyom.MinecraftVisualProgramming;
+import io.github.artyom.events.PlayerCodeCompileEvent;
 import io.github.artyom.exceptions.IncorrectCodeLocationSizeException;
+import io.github.artyom.exceptions.MissingCodeLocationException;
 import io.github.artyom.exceptions.OutsideOfWorldBorderException;
 import io.github.artyom.items.CodeBlocksItem;
 import io.github.artyom.items.ValuesItem;
+import io.github.artyom.listeners.ConfigurableListener;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Location;
 import org.bukkit.NamespacedKey;
@@ -15,14 +18,18 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
+import org.bukkit.event.HandlerList;
 import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class CodeCommand implements CommandExecutor, TabCompleter {
-    List<String> options = List.of("location", "edit", "compile");
+    private final List<String> options = List.of("location", "edit", "compile");
     public static final NamespacedKey CODE_LOCATION_KEY = new NamespacedKey(MinecraftVisualProgramming.getInstance(), "CodeLocation");
+    private static final MinecraftVisualProgramming main = MinecraftVisualProgramming.getInstance();
+    private static List<ConfigurableListener> registeredConfigurableListeners = new ArrayList<>();
 
     @Override
     public boolean onCommand(
@@ -79,7 +86,14 @@ public class CodeCommand implements CommandExecutor, TabCompleter {
         } else if (args[0].equalsIgnoreCase(options.get(1))) {
             this.setCodeInventory(player);
         } else if (args[0].equalsIgnoreCase(options.get(2))) {
-            this.compileCode();
+            try {
+                this.compileCode(player);
+            } catch (MissingCodeLocationException e) {
+                Component exceptionMessage = MinecraftVisualProgramming.MINI_MESSAGE.deserialize(
+                    "<red>" + e.getMessage()
+                );
+                player.sendMessage(exceptionMessage);
+            }
         }
         return true;
     }
@@ -132,7 +146,24 @@ public class CodeCommand implements CommandExecutor, TabCompleter {
         player.playSound(player.getLocation(), Sound.ENTITY_ITEM_PICKUP, 1, 1);
     }
 
-    private void compileCode() {
-        // TODO: À implémenter...
+    private void compileCode(Player player) throws MissingCodeLocationException {
+        String serializedCodeLocation = player.getPersistentDataContainer().get(CODE_LOCATION_KEY, PersistentDataType.STRING);
+        CodeLocation codeLocation = CodeLocation.deserialize(serializedCodeLocation);
+
+        if (codeLocation == null)
+            throw new MissingCodeLocationException();
+
+        for (ConfigurableListener configurableListener : registeredConfigurableListeners)
+            HandlerList.unregisterAll(configurableListener);
+
+        CodeCompiler codeCompiler = new CodeCompiler();
+        List<ConfigurableListener> configurableListeners = codeCompiler.readCodeLocation(codeLocation);
+        for (ConfigurableListener configurableListener : configurableListeners)
+            main.getServer().getPluginManager().registerEvents(configurableListener, main);
+
+        registeredConfigurableListeners = configurableListeners;
+
+        PlayerCodeCompileEvent playerCodeCompileEvent = new PlayerCodeCompileEvent(player);
+        main.getServer().getPluginManager().callEvent(playerCodeCompileEvent);
     }
 }
