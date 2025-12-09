@@ -1,6 +1,8 @@
 package io.github.artyom;
 
 import io.github.artyom.commands.CodeCommand;
+import io.github.artyom.commands.ValueCommand;
+import io.github.artyom.commands.VariableCommand;
 import io.github.artyom.listeners.CodeBlockSyntax;
 import io.github.artyom.listeners.InventoryMenuLogic;
 import io.github.artyom.listeners.SimplePlayerEvents;
@@ -35,7 +37,9 @@ public final class MinecraftVisualProgramming extends JavaPlugin {
 
         try {
             Map<PluginCommand, CommandExecutor> commands = Map.of(
-                Objects.requireNonNull(this.getCommand("code")), new CodeCommand()
+                Objects.requireNonNull(this.getCommand("code")), new CodeCommand(),
+                Objects.requireNonNull(this.getCommand("variable")), new VariableCommand(),
+                Objects.requireNonNull(this.getCommand("value")), new ValueCommand()
             );
             for (Map.Entry<PluginCommand, CommandExecutor> command : commands.entrySet())
                 command.getKey().setExecutor(command.getValue());

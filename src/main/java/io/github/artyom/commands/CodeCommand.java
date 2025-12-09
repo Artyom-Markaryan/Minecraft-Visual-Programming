@@ -29,7 +29,7 @@ public class CodeCommand implements CommandExecutor, TabCompleter {
     private final List<String> options = List.of("location", "edit", "compile");
     public static final NamespacedKey CODE_LOCATION_KEY = new NamespacedKey(MinecraftVisualProgramming.getInstance(), "CodeLocation");
     private static final MinecraftVisualProgramming main = MinecraftVisualProgramming.getInstance();
-    private static List<ConfigurableListener> registeredConfigurableListeners = new ArrayList<>();
+    private List<ConfigurableListener> registeredConfigurableListeners = new ArrayList<>();
 
     @Override
     public boolean onCommand(
@@ -48,7 +48,7 @@ public class CodeCommand implements CommandExecutor, TabCompleter {
 
         if (args.length < 1) {
             Component errorMessage = MinecraftVisualProgramming.MINI_MESSAGE.deserialize(
-                "<red>Merci de spécifier l'une des options suivantes: <#0BDA51>/code location<red>, <#0BDA51>/code edit<red>, ou <#0BDA51>/code compile<red>."
+                "<red>Merci de spécifier l'une des options suivantes: <#0BDA51>/code location<red>, <#0BDA51>/code edit<red> ou <#0BDA51>/code compile<red>."
             );
             player.sendMessage(errorMessage);
             return true;
@@ -105,7 +105,8 @@ public class CodeCommand implements CommandExecutor, TabCompleter {
         @NotNull String label,
         @NotNull String @NotNull [] args
     ) {
-        if (args.length == 1) return options;
+        if (args.length == 1)
+            return options;
         if (args[0].equalsIgnoreCase(options.getFirst()) && args.length <= 7) {
             List<String> locationOptionArguments = List.of("x₁", "y₁", "z₁", "x₂", "y₂", "z₂");
             return List.of(locationOptionArguments.get(args.length - 2));
@@ -153,7 +154,7 @@ public class CodeCommand implements CommandExecutor, TabCompleter {
         if (codeLocation == null)
             throw new MissingCodeLocationException();
 
-        for (ConfigurableListener configurableListener : registeredConfigurableListeners)
+        for (ConfigurableListener configurableListener : this.registeredConfigurableListeners)
             HandlerList.unregisterAll(configurableListener);
 
         CodeCompiler codeCompiler = new CodeCompiler();
@@ -161,7 +162,7 @@ public class CodeCommand implements CommandExecutor, TabCompleter {
         for (ConfigurableListener configurableListener : configurableListeners)
             main.getServer().getPluginManager().registerEvents(configurableListener, main);
 
-        registeredConfigurableListeners = configurableListeners;
+        this.registeredConfigurableListeners = configurableListeners;
 
         PlayerCodeCompileEvent playerCodeCompileEvent = new PlayerCodeCompileEvent(player);
         main.getServer().getPluginManager().callEvent(playerCodeCompileEvent);
